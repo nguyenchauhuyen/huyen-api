@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "merchants",
+  "info": {
+    "name": "merchant"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "email": {
+      "type": "email"
+    },
+    "phoneNumber": {
+      "type": "string"
+    }
+  }
+}

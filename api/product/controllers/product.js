@@ -1,8 +1,26 @@
-'use strict';
+"use strict";
+const { sanitizeEntity } = require("strapi-utils");
 
 /**
  * Read the documentation (https://strapi.io/documentation/v3.x/concepts/controllers.html#core-controllers)
  * to customize this controller
  */
 
-module.exports = {};
+module.exports = {
+  async findOne(ctx) {
+    //check if the params id is an id or a slug
+    const { id } = ctx.params;
+
+    // if you use MongoDB database
+    // we are validating that the id match ObjectID format
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      const entity = await strapi.services.product.findOne({ _id: id });
+      return sanitizeEntity(entity, { model: strapi.models.product });
+    }
+
+    // findOne function works only with IDs
+    // so we find all and get first entry by using slug
+    const entity = await strapi.services.product.findOne({ name: id });
+    return sanitizeEntity(entity, { model: strapi.models.product });
+  }
+};

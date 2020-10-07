@@ -10,10 +10,22 @@
   },
   "attributes": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "unique": true
     },
-    "simNumber": {
-      "type": "biginteger"
+    "category": {
+      "model": "category"
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "displayPrice": {
+      "type": "decimal"
+    },
+    "displayName": {
+      "type": "string",
+      "required": true,
+      "unique": true
     }
   }
 }
