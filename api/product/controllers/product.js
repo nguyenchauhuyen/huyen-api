@@ -18,7 +18,7 @@ module.exports = {
       return sanitizeEntity(entity, { model: strapi.models.product });
     }
 
-    // so we find one and get first entry by using name
+    // so we find one by using name
     const entity = await strapi.services.product.findOne({ name: id });
     return sanitizeEntity(entity, { model: strapi.models.product });
   }
