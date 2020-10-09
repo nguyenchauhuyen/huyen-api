@@ -18,8 +18,7 @@ module.exports = {
       return sanitizeEntity(entity, { model: strapi.models.product });
     }
 
-    // findOne function works only with IDs
-    // so we find all and get first entry by using slug
+    // so we find one and get first entry by using name
     const entity = await strapi.services.product.findOne({ name: id });
     return sanitizeEntity(entity, { model: strapi.models.product });
   }
