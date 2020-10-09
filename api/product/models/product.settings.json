@@ -19,13 +19,20 @@
     "price": {
       "type": "decimal"
     },
-    "displayPrice": {
+    "merchantPrice": {
       "type": "decimal"
     },
     "displayName": {
       "type": "string",
       "required": true,
       "unique": true
+    },
+    "valid": {
+      "type": "boolean",
+      "default": true
+    },
+    "merchant": {
+      "model": "merchant"
     }
   }
 }
