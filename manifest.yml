@@ -1,4 +1,4 @@
 applications:
 - name: huyen-api
-  random-route: true
+  domain: huyen-api.mybluemix.net
   memory: 128M
