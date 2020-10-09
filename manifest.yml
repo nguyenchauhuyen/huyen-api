@@ -1,0 +1,4 @@
+applications:
+- name: huyen-api
+  random-route: true
+  memory: 128M
