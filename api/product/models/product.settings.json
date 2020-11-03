@@ -19,9 +19,6 @@
     "price": {
       "type": "decimal"
     },
-    "merchantPrice": {
-      "type": "decimal"
-    },
     "displayName": {
       "type": "string",
       "required": true,

@@ -573,9 +573,6 @@
               "price": {
                 "type": "number"
               },
-              "merchantPrice": {
-                "type": "number"
-              },
               "displayName": {
                 "type": "string"
               },

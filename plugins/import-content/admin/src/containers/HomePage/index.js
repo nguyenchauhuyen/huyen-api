@@ -28,10 +28,13 @@ class HomePage extends Component {
     loading: true,
     modelOptions: [],
     models: [],
+    merchantOptions: [],
+    merchants: [],
     importSource: "upload",
     analyzing: false,
     analysis: null,
     selectedContentType: "",
+    selectedMerchant: "",
     fieldMapping: {}
   };
 
@@ -70,17 +73,38 @@ class HomePage extends Component {
     return [];
   };
 
+  getMerchants = async () => {
+    this.setState({ loading: true });
+    try {
+      const merchants = await request("/merchants", {
+        method: "GET"
+      });
+      const merchantOptions = merchants.map(model => {
+        return {
+          label: model.name, // (name is used for display_name)
+          value: model.id // (uid is used for table creations)
+        };
+      });
+
+      this.setState({ loading: false });
+
+      return { merchants, merchantOptions };
+    } catch (e) {
+      this.setState({ loading: false }, () => {
+        strapi.notification.error(`${e}`);
+      });
+    }
+    return [];
+  };
+
   onRequestAnalysis = async analysisConfig => {
     this.analysisConfig = analysisConfig;
     this.setState({ analyzing: true }, async () => {
       try {
-        console.log("ANALY");
         const response = await request("/import-content/preAnalyzeImportFile", {
           method: "POST",
           body: analysisConfig
         });
-
-        console.log(response);
 
         this.setState({ analysis: response, analyzing: false }, () => {
           strapi.notification.success(`Analyzed Successfully`);
@@ -102,6 +126,11 @@ class HomePage extends Component {
     this.setState({ selectedContentType });
   };
 
+  selectMerchant = selectedMerchant => {
+    console.log(selectedMerchant);
+    this.setState({ selectedMerchant });
+  };
+
   getTargetModel = () => {
     // <---
     const { models } = this.state;
@@ -115,17 +144,29 @@ class HomePage extends Component {
   };
 
   onSaveImport = async () => {
-    const { selectedContentType, fieldMapping } = this.state;
+    const { selectedContentType, selectedMerchant, fieldMapping } = this.state;
     const { analysisConfig } = this;
-    const importConfig = {
-      ...analysisConfig,
-      contentType: selectedContentType,
-      fieldMapping
-    };
+    const importConfig =
+      selectedContentType === "application::product.product"
+        ? {
+            ...analysisConfig,
+            contentType: selectedContentType,
+            merchant: selectedMerchant,
+            fieldMapping: {
+              ...fieldMapping,
+              displayName: { targetField: "displayName" },
+              merchant: { targetField: "merchant" }
+            }
+          }
+        : {
+            ...analysisConfig,
+            contentType: selectedContentType,
+            fieldMapping
+          };
     try {
       await request("/import-content", { method: "POST", body: importConfig });
       this.setState({ saving: false }, () => {
-      strapi.notification.info("Import started");
+        strapi.notification.info("Import started");
       });
     } catch (e) {
       strapi.notification.error(`${e}`);
@@ -139,6 +180,15 @@ class HomePage extends Component {
         models,
         modelOptions,
         selectedContentType: modelOptions ? modelOptions[0].value : ""
+      });
+    });
+
+    this.getMerchants().then(res => {
+      const { merchants, merchantOptions } = res;
+      this.setState({
+        merchants,
+        merchantOptions,
+        selectedMerchant: merchantOptions ? merchantOptions[0].value : ""
       });
     });
   }
@@ -189,6 +239,17 @@ class HomePage extends Component {
                   options={this.state.modelOptions}
                   onChange={({ target: { value } }) =>
                     this.selectImportDest(value)
+                  }
+                />
+              </div>
+              <div className={"col-4"}>
+                <Label htmlFor="importMerchant">Merchant</Label>
+                <Select
+                  value={this.state.selectedMerchant}
+                  name="importMerchant"
+                  options={this.state.merchantOptions}
+                  onChange={({ target: { value } }) =>
+                    this.selectMerchant(value)
                   }
                 />
               </div>

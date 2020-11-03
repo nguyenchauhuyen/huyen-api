@@ -26,10 +26,10 @@ const getDataFromUrl = url => {
   });
 };
 const resolveDataFromRequest = async ctx => {
-  const { source, type, options, data } = ctx.request.body;
+  const { source, type, options, data, merchant } = ctx.request.body;
   switch (source) {
     case "upload":
-      return { dataType: type, body: data, options };
+      return { dataType: type, body: data, options, merchant };
     case "url":
       const { dataType, body } = await getDataFromUrl(options.url);
       return { dataType, body, options };
@@ -42,7 +42,7 @@ const resolveDataFromRequest = async ctx => {
   }
 };
 
-const getItemsFromData = ({ dataType, body, options }) =>
+const getItemsFromData = ({ dataType, body, options, merchant }) =>
   new Promise(async (resolve, reject) => {
     const parsedContentType = contentTypeParser(dataType);
     if (parsedContentType.isXML()) {
@@ -55,49 +55,65 @@ const getItemsFromData = ({ dataType, body, options }) =>
         ...options,
         columns: true
       });
-      return resolve({ sourceType: "csv", items });
+      if (merchant) {
+        return resolve({
+          sourceType: "csv",
+          items: items.map(item => {
+            if (item.name && merchant) {
+              item.displayName = item.name.replace(/[ ,]/g, "");
+              item.name = item.name.replace(/[ ,.]/g, "");
+            }
+            return {
+              ...item,
+              merchant
+            };
+          })
+        });
+      } else {
+        return resolve({ sourceType: "csv", items });
+      }
     }
     reject({
       contentType: parsedContentType.toString()
     });
   });
 
-  const urlIsMedia = url => {
-    try {
-      const parsed = new URL(url);
-      const extension = parsed.pathname
-        .split(".")
-        .pop()
-        .toLowerCase();
-      switch (extension) {
-        case "png":
-        case "gif":
-        case "jpg":
-        case "jpeg":
-        case "svg":
-        case "bmp":
-        case "tif":
-        case "tiff":
-          return true;
-        case "mp3":
-        case "wav":
-        case "ogg":
-          return true;
-        case "mp4":
-        case "avi":
-          return true;
-        default:
-          return false;
-      }
-    } catch (error) {
-      return false;
+const urlIsMedia = url => {
+  try {
+    const parsed = new URL(url);
+    const extension = parsed.pathname
+      .split(".")
+      .pop()
+      .toLowerCase();
+    switch (extension) {
+      case "png":
+      case "gif":
+      case "jpg":
+      case "jpeg":
+      case "svg":
+      case "bmp":
+      case "tif":
+      case "tiff":
+        return true;
+      case "mp3":
+      case "wav":
+      case "ogg":
+        return true;
+      case "mp4":
+      case "avi":
+        return true;
+      default:
+        return false;
     }
-  };
+  } catch (error) {
+    return false;
+  }
+};
 
-  module.exports = {
-    resolveDataFromRequest,
-    getItemsFromData,
-    getDataFromUrl,
-    stringIsEmail,
-    urlIsMedia
-  };
+module.exports = {
+  resolveDataFromRequest,
+  getItemsFromData,
+  getDataFromUrl,
+  stringIsEmail,
+  urlIsMedia
+};

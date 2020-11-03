@@ -20,6 +20,9 @@ module.exports = {
 
     // so we find one by using name
     const entity = await strapi.services.product.findOne({ name: id });
+    if(entity.merchant) {
+      delete entity.merchant;
+    }
     return sanitizeEntity(entity, { model: strapi.models.product });
   }
 };

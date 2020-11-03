@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "10/25/2020 9:05:32 PM"
+    "x-generation-date": "11/03/2020 3:42:14 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -5147,9 +5147,6 @@
               "price": {
                 "type": "number"
               },
-              "merchantPrice": {
-                "type": "number"
-              },
               "displayName": {
                 "type": "string"
               },
@@ -5324,9 +5321,6 @@
           "price": {
             "type": "number"
           },
-          "merchantPrice": {
-            "type": "number"
-          },
           "displayName": {
             "type": "string"
           },
@@ -5462,9 +5456,6 @@
             "type": "string"
           },
           "price": {
-            "type": "number"
-          },
-          "merchantPrice": {
             "type": "number"
           },
           "displayName": {

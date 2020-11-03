@@ -27,6 +27,7 @@ const importNextItem = async importConfig => {
       sourceItem,
       importConfig.fieldMapping
     );
+    console.log('==>',importedItem);
     const savedContent = await strapi
       .query(importConfig.contentType)
       .create(importedItem);
@@ -100,13 +101,14 @@ module.exports = {
   },
   importItems: (importConfig, ctx) => {
     new Promise(async (resolve, reject) => {
-      const { dataType, body } = await resolveDataFromRequest(ctx);
-      console.log("importitems", importConfig);
+      const { dataType, body, merchant } = await resolveDataFromRequest(ctx);
+      // console.log("CONFIG", merchant);
       try {
         const { items } = await getItemsFromData({
           dataType,
           body,
-          options: importConfig.options
+          options: importConfig.options,
+          merchant
         });
         import_queue[importConfig.id] = items;
       } catch (error) {
