@@ -541,6 +541,9 @@
               "name": {
                 "type": "string"
               },
+              "published_at": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -554,10 +557,6 @@
           },
           "displayName": {
             "type": "string"
-          },
-          "valid": {
-            "type": "boolean",
-            "default": true
           },
           "merchant": {
             "required": [
@@ -585,93 +584,9 @@
               }
             }
           },
-          "created_by": {
-            "required": [
-              "id",
-              "email"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "firstname": {
-                "type": "string"
-              },
-              "lastname": {
-                "type": "string"
-              },
-              "username": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              },
-              "resetPasswordToken": {
-                "type": "string"
-              },
-              "registrationToken": {
-                "type": "string"
-              },
-              "isActive": {
-                "type": "boolean"
-              },
-              "roles": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "blocked": {
-                "type": "boolean"
-              }
-            }
-          },
-          "updated_by": {
-            "required": [
-              "id",
-              "email"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "firstname": {
-                "type": "string"
-              },
-              "lastname": {
-                "type": "string"
-              },
-              "username": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              },
-              "resetPasswordToken": {
-                "type": "string"
-              },
-              "registrationToken": {
-                "type": "string"
-              },
-              "isActive": {
-                "type": "boolean"
-              },
-              "roles": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "blocked": {
-                "type": "boolean"
-              }
-            }
+          "blocked": {
+            "type": "boolean",
+            "default": false
           }
         }
       },
@@ -692,12 +607,12 @@
           "displayName": {
             "type": "string"
           },
-          "valid": {
-            "type": "boolean",
-            "default": true
-          },
           "merchant": {
             "type": "string"
+          },
+          "blocked": {
+            "type": "boolean",
+            "default": false
           },
           "created_by": {
             "type": "string"

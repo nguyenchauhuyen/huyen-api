@@ -2,11 +2,13 @@
   "kind": "collectionType",
   "collectionName": "categories",
   "info": {
-    "name": "Category"
+    "name": "Category",
+    "description": ""
   },
   "options": {
     "increments": true,
-    "timestamps": true
+    "timestamps": true,
+    "draftAndPublish": true
   },
   "attributes": {
     "slug": {
