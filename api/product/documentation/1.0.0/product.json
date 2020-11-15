@@ -526,67 +526,26 @@
           "name": {
             "type": "string"
           },
-          "category": {
-            "required": [
-              "id",
-              "name"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "slug": {
-                "type": "uid"
-              },
-              "name": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
           "price": {
             "type": "number"
           },
           "displayName": {
             "type": "string"
           },
-          "merchant": {
-            "required": [
-              "id",
-              "name"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "phoneNumber": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
           "blocked": {
             "type": "boolean",
             "default": false
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "Vinaphone",
+              "Mobifone",
+              "Viettel",
+              "Vietnammobile",
+              "Gmobile",
+              "iTel"
+            ]
           }
         }
       },
@@ -598,9 +557,6 @@
           "name": {
             "type": "string"
           },
-          "category": {
-            "type": "string"
-          },
           "price": {
             "type": "number"
           },
@@ -613,6 +569,17 @@
           "blocked": {
             "type": "boolean",
             "default": false
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "Vinaphone",
+              "Mobifone",
+              "Viettel",
+              "Vietnammobile",
+              "Gmobile",
+              "iTel"
+            ]
           },
           "created_by": {
             "type": "string"

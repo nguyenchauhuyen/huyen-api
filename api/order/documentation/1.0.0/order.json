@@ -567,9 +567,6 @@
               "name": {
                 "type": "string"
               },
-              "category": {
-                "type": "string"
-              },
               "price": {
                 "type": "number"
               },
@@ -581,6 +578,9 @@
               },
               "blocked": {
                 "type": "boolean"
+              },
+              "category": {
+                "type": "string"
               },
               "created_by": {
                 "type": "string"

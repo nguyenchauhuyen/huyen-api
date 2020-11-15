@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "11/14/2020 11:57:46 PM"
+    "x-generation-date": "11/15/2020 7:06:01 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -4885,9 +4885,6 @@
               "name": {
                 "type": "string"
               },
-              "category": {
-                "type": "string"
-              },
               "price": {
                 "type": "number"
               },
@@ -4899,6 +4896,9 @@
               },
               "blocked": {
                 "type": "boolean"
+              },
+              "category": {
+                "type": "string"
               },
               "created_by": {
                 "type": "string"
@@ -4951,67 +4951,26 @@
           "name": {
             "type": "string"
           },
-          "category": {
-            "required": [
-              "id",
-              "name"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "slug": {
-                "type": "uid"
-              },
-              "name": {
-                "type": "string"
-              },
-              "published_at": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
           "price": {
             "type": "number"
           },
           "displayName": {
             "type": "string"
           },
-          "merchant": {
-            "required": [
-              "id",
-              "name"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              },
-              "phoneNumber": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
           "blocked": {
             "type": "boolean",
             "default": false
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "Vinaphone",
+              "Mobifone",
+              "Viettel",
+              "Vietnammobile",
+              "Gmobile",
+              "iTel"
+            ]
           }
         }
       },
@@ -5023,9 +4982,6 @@
           "name": {
             "type": "string"
           },
-          "category": {
-            "type": "string"
-          },
           "price": {
             "type": "number"
           },
@@ -5038,6 +4994,17 @@
           "blocked": {
             "type": "boolean",
             "default": false
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "Vinaphone",
+              "Mobifone",
+              "Viettel",
+              "Vietnammobile",
+              "Gmobile",
+              "iTel"
+            ]
           },
           "created_by": {
             "type": "string"

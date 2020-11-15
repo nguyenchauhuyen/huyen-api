@@ -21,7 +21,7 @@ class TargetFieldSelect extends Component {
       .map(fieldName => {
         const attribute = get(schemaAttributes, [fieldName], {});
 
-        return attribute.type && { label: fieldName, value: fieldName };
+        return { label: fieldName, value: fieldName };
       })
       .filter(obj => obj !== undefined);
 

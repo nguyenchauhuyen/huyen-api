@@ -10,6 +10,12 @@ const validateUrl = url => {
   return URL_REGEXP.test(url);
 };
 const EMAIL_REGEXP = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const CATEGORIES = [{ name: "Vinaphone", list: ['091', '094', '088', '081', '082', '083', '084', '085']}, 
+{name: "Mobifone", list: ['090', '093', '089', '070', '076', '077', '078', '079']},
+{name: "Viettel", list: ['096', '097', '098', '086', '032', '033', '034', '035', '036', '037', '038', '039']},
+{name: "Vietnammobile", list: ['090', '093', '089', '070', '076', '077', '078', '079']}
+];
+
 const stringIsEmail = data => {
   EMAIL_REGEXP.lastIndex = 0;
   return EMAIL_REGEXP.test(data);
@@ -62,6 +68,14 @@ const getItemsFromData = ({ dataType, body, options, merchant }) =>
             if (item.name && merchant) {
               item.displayName = item.name.replace(/[ ,]/g, "");
               item.name = item.name.replace(/[ ,.]/g, "");
+              const cat = CATEGORIES.filter(e => {
+                return e.list.indexOf(item.name.slice(0,3)) > -1;
+              })
+              if(cat.length) {
+                item.category = cat[0].name;
+              } else {
+                item.category = ''
+              }
             }
             return {
               ...item,

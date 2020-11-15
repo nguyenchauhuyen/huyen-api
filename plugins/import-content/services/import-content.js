@@ -27,7 +27,7 @@ const importNextItem = async importConfig => {
       sourceItem,
       importConfig.fieldMapping
     );
-    console.log('==>',importedItem);
+    console.log("==>", importedItem);
     const savedContent = await strapi
       .query(importConfig.contentType)
       .create(importedItem);
@@ -111,6 +111,18 @@ module.exports = {
           merchant
         });
         import_queue[importConfig.id] = items;
+
+        if(merchant) {
+          console.log('DELETE ALL', merchant)
+          let count = await strapi.query(importConfig.contentType).count({ 'merchant.id': merchant });
+
+          while(count >0) {
+            console.log('COUNT =>>',count)
+            await strapi.query(importConfig.contentType).delete({ 'merchant.id': merchant });
+            count = await strapi.query(importConfig.contentType).count({ 'merchant.id': merchant });
+          }
+        }
+
       } catch (error) {
         reject(error);
       }
@@ -118,6 +130,7 @@ module.exports = {
         status: "import started",
         importConfigId: importConfig.id
       });
+      
       importNextItem(importConfig);
     });
   },

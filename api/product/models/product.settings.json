@@ -15,9 +15,6 @@
       "type": "string",
       "unique": true
     },
-    "category": {
-      "model": "category"
-    },
     "price": {
       "type": "decimal"
     },
@@ -27,11 +24,23 @@
       "unique": true
     },
     "merchant": {
+      "private": true,
       "model": "merchant"
     },
     "blocked": {
       "type": "boolean",
       "default": false
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "Vinaphone",
+        "Mobifone",
+        "Viettel",
+        "Vietnammobile",
+        "Gmobile",
+        "iTel"
+      ]
     }
   }
 }

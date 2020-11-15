@@ -106,7 +106,38 @@ class HomePage extends Component {
           body: analysisConfig
         });
 
-        this.setState({ analysis: response, analyzing: false }, () => {
+        console.log(response, analysisConfig);
+
+        const analysis = {
+          sourceType: response.sourceType,
+          itemCount: response.itemCount,
+          fieldStats: [
+            ...response.fieldStats,
+            {
+              fieldName: "displayName",
+              count: response.itemCount,
+              format: "string",
+              minLength: 1,
+              maxLength: 200
+            },
+            {
+              fieldName: "category",
+              count: response.itemCount,
+              format: "string",
+              minLength: 1,
+              maxLength: 200
+            },
+            {
+              fieldName: "merchant",
+              count: response.itemCount,
+              format: "string",
+              minLength: 1,
+              maxLength: 200
+            }
+          ]
+        };
+
+        this.setState({ analysis, analyzing: false }, () => {
           strapi.notification.success(`Analyzed Successfully`);
         });
       } catch (e) {
@@ -153,9 +184,10 @@ class HomePage extends Component {
             contentType: selectedContentType,
             merchant: selectedMerchant,
             fieldMapping: {
-              ...fieldMapping,
-              displayName: { targetField: "displayName" },
-              merchant: { targetField: "merchant" }
+              ...fieldMapping
+              // displayName: { targetField: "displayName" },
+              // category: { targetField: "targetField" },
+              // merchant: { targetField: "merchant" }
             }
           }
         : {
@@ -176,6 +208,7 @@ class HomePage extends Component {
   componentDidMount() {
     this.getModels().then(res => {
       const { models, modelOptions } = res;
+      console.log(models)
       this.setState({
         models,
         modelOptions,
