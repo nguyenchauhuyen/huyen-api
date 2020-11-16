@@ -517,43 +517,19 @@
       "Order": {
         "required": [
           "id",
-          "orderId",
-          "amount"
+          "amount",
+          "customerName",
+          "customerPhone"
         ],
         "properties": {
           "id": {
             "type": "string"
-          },
-          "orderId": {
-            "type": "integer"
           },
           "amount": {
             "type": "number"
           },
           "bookingNote": {
             "type": "string"
-          },
-          "status": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "value": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
           },
           "product": {
             "required": [
@@ -589,29 +565,61 @@
                 "type": "string"
               }
             }
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerAddress": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "default": "New",
+            "enum": [
+              "New",
+              "Confirmed",
+              "Paid",
+              "Cancelled",
+              "Pending"
+            ]
           }
         }
       },
       "NewOrder": {
         "required": [
-          "orderId",
-          "amount"
+          "amount",
+          "customerName",
+          "customerPhone"
         ],
         "properties": {
-          "orderId": {
-            "type": "integer"
-          },
           "amount": {
             "type": "number"
           },
           "bookingNote": {
             "type": "string"
           },
-          "status": {
-            "type": "string"
-          },
           "product": {
             "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerPhone": {
+            "type": "string"
+          },
+          "customerAddress": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "default": "New",
+            "enum": [
+              "New",
+              "Confirmed",
+              "Paid",
+              "Cancelled",
+              "Pending"
+            ]
           },
           "created_by": {
             "type": "string"

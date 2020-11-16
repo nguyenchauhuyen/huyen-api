@@ -47,7 +47,7 @@ const importNextItem = async importConfig => {
     console.log(e);
   }
   const { IMPORT_THROTTLE } = strapi.plugins["import-content"].config;
-  setTimeout(() => importNextItem(importConfig), IMPORT_THROTTLE);
+  setTimeout(() => importNextItem(importConfig), IMPORT_THROTTLE || 0);
 };
 
 const undo_queue = {};
@@ -112,17 +112,22 @@ module.exports = {
         });
         import_queue[importConfig.id] = items;
 
-        if(merchant) {
-          console.log('DELETE ALL', merchant)
-          let count = await strapi.query(importConfig.contentType).count({ 'merchant.id': merchant });
+        if (merchant) {
+          console.log("DELETE ALL", merchant);
+          let count = await strapi
+            .query(importConfig.contentType)
+            .count({ "merchant.id": merchant });
 
-          while(count >0) {
-            console.log('COUNT =>>',count)
-            await strapi.query(importConfig.contentType).delete({ 'merchant.id': merchant });
-            count = await strapi.query(importConfig.contentType).count({ 'merchant.id': merchant });
+          while (count > 0) {
+            console.log("COUNT =>>", count);
+            await strapi
+              .query(importConfig.contentType)
+              .delete({ "merchant.id": merchant });
+            count = await strapi
+              .query(importConfig.contentType)
+              .count({ "merchant.id": merchant });
           }
         }
-
       } catch (error) {
         reject(error);
       }
@@ -130,7 +135,7 @@ module.exports = {
         status: "import started",
         importConfigId: importConfig.id
       });
-      
+
       importNextItem(importConfig);
     });
   },

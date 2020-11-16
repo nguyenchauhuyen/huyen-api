@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "11/15/2020 7:06:01 PM"
+    "x-generation-date": "11/16/2020 11:55:43 AM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -4835,43 +4835,19 @@
       "Order": {
         "required": [
           "id",
-          "orderId",
-          "amount"
+          "amount",
+          "customerName",
+          "customerPhone"
         ],
         "properties": {
           "id": {
             "type": "string"
-          },
-          "orderId": {
-            "type": "integer"
           },
           "amount": {
             "type": "number"
           },
           "bookingNote": {
             "type": "string"
-          },
-          "status": {
-            "required": [
-              "id"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "value": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
           },
           "product": {
             "required": [
@@ -4907,29 +4883,61 @@
                 "type": "string"
               }
             }
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerAddress": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "default": "New",
+            "enum": [
+              "New",
+              "Confirmed",
+              "Paid",
+              "Cancelled",
+              "Pending"
+            ]
           }
         }
       },
       "NewOrder": {
         "required": [
-          "orderId",
-          "amount"
+          "amount",
+          "customerName",
+          "customerPhone"
         ],
         "properties": {
-          "orderId": {
-            "type": "integer"
-          },
           "amount": {
             "type": "number"
           },
           "bookingNote": {
             "type": "string"
           },
-          "status": {
-            "type": "string"
-          },
           "product": {
             "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerPhone": {
+            "type": "string"
+          },
+          "customerAddress": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "default": "New",
+            "enum": [
+              "New",
+              "Confirmed",
+              "Paid",
+              "Cancelled",
+              "Pending"
+            ]
           },
           "created_by": {
             "type": "string"

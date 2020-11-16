@@ -2,18 +2,15 @@
   "kind": "collectionType",
   "collectionName": "orders",
   "info": {
-    "name": "Order"
+    "name": "Order",
+    "description": ""
   },
   "options": {
     "increments": true,
-    "timestamps": true
+    "timestamps": true,
+    "draftAndPublish": false
   },
   "attributes": {
-    "orderId": {
-      "type": "biginteger",
-      "required": true,
-      "unique": true
-    },
     "amount": {
       "type": "decimal",
       "required": true
@@ -21,11 +18,31 @@
     "bookingNote": {
       "type": "string"
     },
-    "status": {
-      "model": "order-status"
-    },
     "product": {
       "model": "product"
+    },
+    "customerName": {
+      "type": "string",
+      "required": true
+    },
+    "customerPhone": {
+      "type": "string",
+      "private": true,
+      "required": true
+    },
+    "customerAddress": {
+      "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "New",
+        "Confirmed",
+        "Paid",
+        "Cancelled",
+        "Pending"
+      ],
+      "default": "New"
     }
   }
 }
