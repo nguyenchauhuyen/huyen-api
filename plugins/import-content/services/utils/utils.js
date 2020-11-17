@@ -37,9 +37,11 @@ const CATEGORIES = [
     ]
   },
   {
-    name: "Vietnammobile",
-    list: ["090", "093", "089", "070", "076", "077", "078", "079"]
-  }
+    name: "Vietnamobile",
+    list: ["092", "052", "053", "054", "055", "056", "057", "058"]
+  },
+  { name: "Gmobile", list: ["099", "059"] },
+  { name: "iTelecom", list: ["087"] }
 ];
 
 const stringIsEmail = data => {
