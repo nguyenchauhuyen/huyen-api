@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "11/19/2020 4:34:08 PM"
+    "x-generation-date": "11/19/2020 4:58:15 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -4977,7 +4977,7 @@
               "Vinaphone",
               "Mobifone",
               "Viettel",
-              "Vietnammobile",
+              "Vietnamobile",
               "Gmobile",
               "iTelecom"
             ]
@@ -5011,7 +5011,7 @@
               "Vinaphone",
               "Mobifone",
               "Viettel",
-              "Vietnammobile",
+              "Vietnamobile",
               "Gmobile",
               "iTelecom"
             ]
