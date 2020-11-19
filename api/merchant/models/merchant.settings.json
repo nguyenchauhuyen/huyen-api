@@ -2,11 +2,13 @@
   "kind": "collectionType",
   "collectionName": "merchants",
   "info": {
-    "name": "merchant"
+    "name": "Merchant",
+    "description": ""
   },
   "options": {
     "increments": true,
-    "timestamps": true
+    "timestamps": true,
+    "draftAndPublish": false
   },
   "attributes": {
     "name": {
@@ -15,10 +17,13 @@
       "unique": true
     },
     "email": {
-      "type": "email"
+      "type": "email",
+      "unique": true
     },
     "phoneNumber": {
-      "type": "string"
+      "type": "string",
+      "unique": true,
+      "required": true
     }
   }
 }

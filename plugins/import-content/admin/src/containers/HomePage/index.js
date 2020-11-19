@@ -211,8 +211,8 @@ class HomePage extends Component {
       // console.log(modelOptions)
       this.setState({
         models,
-        modelOptions
-        // selectedContentType: modelOptions ? modelOptions[modelOptions.length -1].value : ""
+        modelOptions,
+        selectedContentType: modelOptions ? modelOptions[modelOptions.length -1].value : ""
       });
     });
 

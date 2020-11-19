@@ -2,7 +2,7 @@
   "kind": "collectionType",
   "collectionName": "products",
   "info": {
-    "name": "product",
+    "name": "Product",
     "description": ""
   },
   "options": {
@@ -39,7 +39,7 @@
         "Viettel",
         "Vietnammobile",
         "Gmobile",
-        "iTel"
+        "iTelecom"
       ]
     }
   }

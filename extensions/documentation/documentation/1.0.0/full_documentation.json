@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "11/19/2020 1:38:43 PM"
+    "x-generation-date": "11/19/2020 4:34:08 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -4761,7 +4761,8 @@
       "Merchant": {
         "required": [
           "id",
-          "name"
+          "name",
+          "phoneNumber"
         ],
         "properties": {
           "id": {
@@ -4780,7 +4781,8 @@
       },
       "NewMerchant": {
         "required": [
-          "name"
+          "name",
+          "phoneNumber"
         ],
         "properties": {
           "name": {
@@ -4977,7 +4979,7 @@
               "Viettel",
               "Vietnammobile",
               "Gmobile",
-              "iTel"
+              "iTelecom"
             ]
           }
         }
@@ -5011,7 +5013,7 @@
               "Viettel",
               "Vietnammobile",
               "Gmobile",
-              "iTel"
+              "iTelecom"
             ]
           },
           "created_by": {
