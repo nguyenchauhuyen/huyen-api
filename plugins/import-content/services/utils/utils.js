@@ -94,6 +94,7 @@ const getItemsFromData = ({ dataType, body, options, merchant }) =>
           sourceType: "csv",
           items: items.map(item => {
             if (item.name && merchant) {
+              item.price= item.price.replace(/[ ,.]/g, "");
               item.displayName = item.name.replace(/[ ,]/g, "");
               item.name = item.name.replace(/[ ,.]/g, "");
               const cat = CATEGORIES.filter(e => {

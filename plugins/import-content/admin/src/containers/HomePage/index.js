@@ -33,7 +33,7 @@ class HomePage extends Component {
     importSource: "upload",
     analyzing: false,
     analysis: null,
-    selectedContentType: "",
+    selectedContentType: "application::product.product",
     selectedMerchant: "",
     fieldMapping: {}
   };
@@ -208,11 +208,11 @@ class HomePage extends Component {
   componentDidMount() {
     this.getModels().then(res => {
       const { models, modelOptions } = res;
-      console.log(models)
+      // console.log(modelOptions)
       this.setState({
         models,
-        modelOptions,
-        selectedContentType: modelOptions ? modelOptions[0].value : ""
+        modelOptions
+        // selectedContentType: modelOptions ? modelOptions[modelOptions.length -1].value : ""
       });
     });
 
