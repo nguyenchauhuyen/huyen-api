@@ -27,7 +27,7 @@
     },
     "customerPhone": {
       "type": "string",
-      "private": true,
+      "private": false,
       "required": true
     },
     "customerAddress": {
@@ -43,6 +43,9 @@
         "Pending"
       ],
       "default": "New"
+    },
+    "customerEmail": {
+      "type": "email"
     }
   }
 }

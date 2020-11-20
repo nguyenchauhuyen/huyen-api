@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "11/19/2020 4:58:15 PM"
+    "x-generation-date": "11/20/2020 5:29:59 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -4889,6 +4889,9 @@
           "customerName": {
             "type": "string"
           },
+          "customerPhone": {
+            "type": "string"
+          },
           "customerAddress": {
             "type": "string"
           },
@@ -4902,6 +4905,9 @@
               "Cancelled",
               "Pending"
             ]
+          },
+          "customerEmail": {
+            "type": "string"
           }
         }
       },
@@ -4940,6 +4946,9 @@
               "Cancelled",
               "Pending"
             ]
+          },
+          "customerEmail": {
+            "type": "string"
           },
           "created_by": {
             "type": "string"

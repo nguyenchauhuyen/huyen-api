@@ -569,6 +569,9 @@
           "customerName": {
             "type": "string"
           },
+          "customerPhone": {
+            "type": "string"
+          },
           "customerAddress": {
             "type": "string"
           },
@@ -582,6 +585,9 @@
               "Cancelled",
               "Pending"
             ]
+          },
+          "customerEmail": {
+            "type": "string"
           }
         }
       },
@@ -620,6 +626,9 @@
               "Cancelled",
               "Pending"
             ]
+          },
+          "customerEmail": {
+            "type": "string"
           },
           "created_by": {
             "type": "string"
