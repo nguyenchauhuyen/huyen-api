@@ -1,4 +1,6 @@
 "use strict";
+const { sanitizeEntity } = require("strapi-utils");
+
 // const _ = require("lodash");
 
 /**
@@ -17,19 +19,24 @@ module.exports = {
   async create(ctx) {
     let entity = await strapi.services.order.create(ctx.request.body);
     if (entity.id) {
-      await strapi.plugins["email"].services.email.send({
-        to: "nguyenchauhuyen@gmail.com",
-        // from: "admin@strapi.io",
-        subject: "New Order at SimDep4G.com !!!",
-        text: `
-            The product ${entity.product.name} has been booked.
-            Customer Name: ${entity.customerName}
-            Customer Phone: ${entity.customerPhone}
-            Customer Address: ${entity.customerAddress}
-            Note:
-              ${entity.bookingNote}
-            `
-      });
+      try {
+        await strapi.plugins["email"].services.email.send({
+          to: "nguyenchauhuyen@gmail.com",
+          // from: "admin@strapi.io",
+          subject: "New Order at SimDep4G.com !!!",
+          text: `
+                    The product ${entity.product.name} has been booked.
+                    Customer Name: ${entity.customerName}
+                    Customer Phone: ${entity.customerPhone}
+                    Customer Address: ${entity.customerAddress}
+                    Note:
+                      ${entity.bookingNote}
+                    `
+        });
+      } catch (error) {
+        entity.emailStatus = error;
+        console.log(error);
+      }
     }
     return sanitizeEntity(entity, { model: strapi.models.order });
   }
