@@ -175,8 +175,20 @@ class HomePage extends Component {
   };
 
   onSaveImport = async () => {
-    const { selectedContentType, selectedMerchant, fieldMapping } = this.state;
+    const {
+      selectedContentType,
+      selectedMerchant,
+      fieldMapping,
+      analysis
+    } = this.state;
     const { analysisConfig } = this;
+
+    let defaultMapping = fieldMapping;
+    analysis.fieldStats.forEach(field => {
+      if (!fieldMapping[field.fieldName]) {
+        defaultMapping[field.fieldName] = { targetField: field.fieldName };
+      }
+    });
     const importConfig =
       selectedContentType === "application::product.product"
         ? {
@@ -184,10 +196,7 @@ class HomePage extends Component {
             contentType: selectedContentType,
             merchant: selectedMerchant,
             fieldMapping: {
-              ...fieldMapping
-              // displayName: { targetField: "displayName" },
-              // category: { targetField: "targetField" },
-              // merchant: { targetField: "merchant" }
+              ...defaultMapping
             }
           }
         : {
@@ -196,7 +205,10 @@ class HomePage extends Component {
             fieldMapping
           };
     try {
-      await request("/import-content", { method: "POST", body: importConfig });
+      await request("/import-content", {
+        method: "POST",
+        body: importConfig
+      });
       this.setState({ saving: false }, () => {
         strapi.notification.info("Import started");
       });
@@ -212,7 +224,9 @@ class HomePage extends Component {
       this.setState({
         models,
         modelOptions,
-        selectedContentType: modelOptions ? modelOptions[modelOptions.length -1].value : ""
+        selectedContentType: modelOptions
+          ? modelOptions[modelOptions.length - 1].value
+          : ""
       });
     });
 
