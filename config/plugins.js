@@ -6,7 +6,7 @@ module.exports = ({ env }) => ({
       apiKey: env('SENDGRID_API_KEY')
     },
     settings: {
-      defaultFrom: "admin@simdep4g.com",
+      defaultFrom: "noreply@simdep4g.com",
       // defaultReplyTo: "nguyenchauhuyen@gmail.com",
     }
   }
