@@ -102,7 +102,7 @@ const getItemsFromData = ({ dataType, body, options, merchant }) =>
               item.displayName = name.replace(/[ ,]/g, ".");
               item.name = name.replace(/[ ,.]/g, "");
               const cat = CATEGORIES.filter(e => {
-                return e.list.indexOf(name.slice(0, 3)) > -1;
+                return e.list.indexOf(item.name.slice(0, 3)) > -1;
               });
               if (cat.length) {
                 item.category = cat[0].name;
