@@ -225,7 +225,7 @@ class HomePage extends Component {
         models,
         modelOptions,
         selectedContentType: modelOptions
-          ? modelOptions[modelOptions.length - 1].value
+          ? "application::product.product"
           : ""
       });
     });

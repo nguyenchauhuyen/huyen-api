@@ -102,7 +102,6 @@ module.exports = {
   importItems: (importConfig, ctx) => {
     new Promise(async (resolve, reject) => {
       const { dataType, body, merchant } = await resolveDataFromRequest(ctx);
-      // console.log("CONFIG", merchant);
       try {
         const { items } = await getItemsFromData({
           dataType,
@@ -116,16 +115,16 @@ module.exports = {
           console.log("DELETE ALL", merchant);
           let count = await strapi
             .query(importConfig.contentType)
-            .count({ "merchant.id": merchant });
+            .count({ "merchant": merchant });
 
           while (count > 0) {
             console.log("COUNT =>>", count);
             await strapi
               .query(importConfig.contentType)
-              .delete({ "merchant.id": merchant });
+              .delete({ "merchant": merchant });
             count = await strapi
               .query(importConfig.contentType)
-              .count({ "merchant.id": merchant });
+              .count({ "merchant": merchant });
           }
         }
       } catch (error) {

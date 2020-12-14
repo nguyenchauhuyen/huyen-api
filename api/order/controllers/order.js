@@ -24,13 +24,12 @@ module.exports = {
           to: "huyen.nguyen@systum.com",
           // from: "admin@strapi.io",
           subject: `New Order from ${entity.customerName}`,
-          text: `
-            The product ${entity.product.name} has been booked.
-            Customer Name: ${entity.customerName}
-            Customer Phone: ${entity.customerPhone}
-            Customer Address: ${entity.customerAddress}
-            Total Amount: ${entity.amount}
-            Note: ${entity.bookingNote}`
+          text: `The product ${entity.product.name} has been booked.
+Customer Name: ${entity.customerName}
+Customer Phone: ${entity.customerPhone}
+Customer Address: ${entity.customerAddress}
+Total Amount: ${entity.amount}
+Note: ${entity.bookingNote}`
         });
       } catch (error) {
         entity.emailStatus = error;

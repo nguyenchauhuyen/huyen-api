@@ -1,0 +1,21 @@
+{
+  "kind": "singleType",
+  "collectionName": "settings",
+  "info": {
+    "name": "Setting"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "emailAdmin": {
+      "type": "email",
+      "default": "nguyenchauhuyen@gmail.com"
+    },
+    "emailFrom": {
+      "type": "email"
+    }
+  }
+}
