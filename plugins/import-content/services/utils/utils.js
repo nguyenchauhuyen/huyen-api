@@ -94,19 +94,20 @@ const getItemsFromData = ({ dataType, body, options, merchant }) =>
           sourceType: "csv",
           items: items.map(item => {
             if (item.name && merchant) {
-              if (item.name[0] !== "0") {
-                item.name = "0" + item.name;
+              let name = item.name.trim();
+              if (name.charAt(0) !== "0") {
+                name = "0" + name;
               }
               item.price = item.price.replace(/[ ,.]/g, "");
-              item.displayName = item.name.replace(/[ ,]/g, ".");
-              item.name = item.name.replace(/[ ,.]/g, "");
+              item.displayName = name.replace(/[ ,]/g, ".");
+              item.name = name.replace(/[ ,.]/g, "");
               const cat = CATEGORIES.filter(e => {
-                return e.list.indexOf(item.name.slice(0, 3)) > -1;
+                return e.list.indexOf(name.slice(0, 3)) > -1;
               });
               if (cat.length) {
                 item.category = cat[0].name;
               } else {
-                item.category = "";
+                item.category = "Điện Thoại Bàn";
               }
             }
             return {
