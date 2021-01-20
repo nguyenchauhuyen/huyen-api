@@ -25,6 +25,7 @@
     "strapi": "3.2.5",
     "strapi-admin": "3.2.5",
     "strapi-connector-mongoose": "3.2.5",
+    "strapi-middleware-cache": "^1.2.0",
     "strapi-plugin-content-manager": "3.2.5",
     "strapi-plugin-content-type-builder": "3.2.5",
     "strapi-plugin-documentation": "3.2.5",
