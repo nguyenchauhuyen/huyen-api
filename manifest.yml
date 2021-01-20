@@ -3,4 +3,4 @@ applications:
   host: huyen-api
   path: .
   domain: mybluemix.net
-  memory: 128M
+  memory: 256M
