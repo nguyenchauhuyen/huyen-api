@@ -101,41 +101,67 @@ class HomePage extends Component {
     this.analysisConfig = analysisConfig;
     this.setState({ analyzing: true }, async () => {
       try {
-        const response = await request("/import-content/preAnalyzeImportFile", {
-          method: "POST",
-          body: analysisConfig
-        });
+        console.log(analysisConfig);
+        let analysis = {};
 
-        console.log(response, analysisConfig);
-
-        const analysis = {
-          sourceType: response.sourceType,
-          itemCount: response.itemCount,
-          fieldStats: [
-            ...response.fieldStats,
+        if (this.state.selectedContentType === "application::product.product") {
+          let itemCount = analysisConfig.data.split("\n").length - 1;
+          analysis = {
+            sourceType: analysisConfig.sourceType,
+            itemCount: itemCount,
+            fieldStats: [
+              {
+                fieldName: "name",
+                count: itemCount,
+                format: "string",
+                minLength: 1,
+                maxLength: 200
+              },
+              {
+                fieldName: "displayName",
+                count: itemCount,
+                format: "string",
+                minLength: 1,
+                maxLength: 200
+              },
+              {
+                fieldName: "price",
+                count: itemCount,
+                format: "string",
+                minLength: 1,
+                maxLength: 200
+              },
+              {
+                fieldName: "category",
+                count: itemCount,
+                format: "string",
+                minLength: 1,
+                maxLength: 200
+              },
+              {
+                fieldName: "merchant",
+                count: itemCount,
+                format: "string",
+                minLength: 1,
+                maxLength: 200
+              }
+            ]
+          };
+        } else {
+          const response = await request(
+            "/import-content/preAnalyzeImportFile",
             {
-              fieldName: "displayName",
-              count: response.itemCount,
-              format: "string",
-              minLength: 1,
-              maxLength: 200
-            },
-            {
-              fieldName: "category",
-              count: response.itemCount,
-              format: "string",
-              minLength: 1,
-              maxLength: 200
-            },
-            {
-              fieldName: "merchant",
-              count: response.itemCount,
-              format: "string",
-              minLength: 1,
-              maxLength: 200
+              method: "POST",
+              body: analysisConfig
             }
-          ]
-        };
+          );
+
+          analysis = {
+            sourceType: response.sourceType,
+            itemCount: response.itemCount,
+            fieldStats: [...response.fieldStats]
+          };
+        }
 
         this.setState({ analysis, analyzing: false }, () => {
           strapi.notification.success(`Analyzed Successfully`);
@@ -171,6 +197,7 @@ class HomePage extends Component {
 
   setFieldMapping = fieldMapping => {
     // <---
+    console.log(fieldMapping);
     this.setState({ fieldMapping });
   };
 
@@ -224,9 +251,7 @@ class HomePage extends Component {
       this.setState({
         models,
         modelOptions,
-        selectedContentType: modelOptions
-          ? "application::product.product"
-          : ""
+        selectedContentType: modelOptions ? "application::product.product" : ""
       });
     });
 
