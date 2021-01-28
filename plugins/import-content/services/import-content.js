@@ -115,16 +115,16 @@ module.exports = {
           console.log("DELETE ALL", merchant);
           let count = await strapi
             .query(importConfig.contentType)
-            .count({ "merchant": merchant });
+            .count({ merchant: merchant });
 
           while (count > 0) {
             console.log("COUNT =>>", count);
             await strapi
               .query(importConfig.contentType)
-              .delete({ "merchant": merchant, "_limit": 50000 });
+              .delete({ merchant: merchant, _limit: 5000 });
             count = await strapi
               .query(importConfig.contentType)
-              .count({ "merchant": merchant });
+              .count({ merchant: merchant });
           }
         }
       } catch (error) {
