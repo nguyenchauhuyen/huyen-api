@@ -27,7 +27,8 @@
     },
     "merchant": {
       "private": true,
-      "model": "merchant"
+      "model": "merchant",
+      "index": true
     },
     "blocked": {
       "type": "boolean",
