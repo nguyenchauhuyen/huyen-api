@@ -7,4 +7,5 @@ module.exports = ({ env }) => ({
       secret: env('ADMIN_JWT_SECRET', '3fa7baedfb859ba1db9d263a89c9022b'),
     },
   },
+  bookingEmailTo: env('BOOKING_EMAIL_TO', 'nguyenchauhuyen@gmail.com')
 });

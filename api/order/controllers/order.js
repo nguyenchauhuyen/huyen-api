@@ -7,13 +7,6 @@ const { sanitizeEntity } = require("strapi-utils");
  * Read the documentation (https://strapi.io/documentation/v3.x/concepts/controllers.html#core-controllers)
  * to customize this controller
  */
-// const emailTemplate = {
-//   subject: "New Order at SimDep4G.com !!!",
-//   text: `New order created!
-//       Your account is now linked with: <%= order.customerName %>.`,
-//   html: `<h1>Welcome on mywebsite.fr!</h1>
-//       <p>Your account is now linked with: <%= order.customerName %>.<p>`
-// };
 
 module.exports = {
   async create(ctx) {
@@ -21,7 +14,7 @@ module.exports = {
     if (entity.id) {
       try {
         await strapi.plugins["email"].services.email.send({
-          to: "huyen.nguyen@systum.com",
+          to: strapi.config.get("server.bookingEmailTo"),
           // from: "admin@strapi.io",
           subject: `New Order from ${entity.customerName}`,
           text: `The product ${entity.product.name} has been booked.

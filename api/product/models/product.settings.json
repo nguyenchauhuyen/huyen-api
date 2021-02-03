@@ -18,6 +18,7 @@
     },
     "price": {
       "type": "decimal",
+      "required": true,
       "index": true
     },
     "displayName": {

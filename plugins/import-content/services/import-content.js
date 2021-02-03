@@ -118,7 +118,7 @@ module.exports = {
             .count({ merchant: merchant });
 
           while (count > 0) {
-            console.log("COUNT =>>", count);
+            console.log(`${merchant} =>>`, count);
             await strapi
               .query(importConfig.contentType)
               .delete({ merchant: merchant, _limit: 1000 });
