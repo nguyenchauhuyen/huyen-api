@@ -3,7 +3,7 @@ module.exports = ({ env }) => ({
     cache: {
       enabled: true,
       type: "mem",
-      max: 20000,
+      max: 10000,
       models: ["products"]
       //   redisConfig: {
       //     sentinels: [
