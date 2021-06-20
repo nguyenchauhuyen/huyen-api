@@ -8,7 +8,7 @@ import { Button } from "@buffetjs/core";
 class UploadFileForm extends Component {
   state = {
     file: null,
-    type: null,
+    type: 'text/csv',
     options: {
       filename: null
     },
@@ -18,7 +18,7 @@ class UploadFileForm extends Component {
     file &&
       this.setState({
         file,
-        type: file.type,
+        // type: file.type,
         options: { ...this.state.options, filename: file.name }
       });
   };
@@ -41,12 +41,14 @@ class UploadFileForm extends Component {
   };
 
   clickAnalyzeUploadFile = async () => {
-    const { file, options } = this.state;
+    const { file, options, type } = this.state;
     const data = file && (await this.readFileContent(file));
+
+    console.log('ANALYZE', data, file)
     data &&
       this.props.onRequestAnalysis({
         source: "upload",
-        type: file.type,
+        type,
         options,
         data
       });
