@@ -76,7 +76,7 @@ class HomePage extends Component {
   getMerchants = async () => {
     this.setState({ loading: true });
     try {
-      const merchants = await request("/merchants?_sort=name:asc", {
+      const merchants = await request("/merchants?_sort=name:asc&_limit=1000", {
         method: "GET"
       });
       const merchantOptions = merchants.map(model => {

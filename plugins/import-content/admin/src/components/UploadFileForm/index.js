@@ -14,6 +14,7 @@ class UploadFileForm extends Component {
     },
     isDragging: false
   };
+
   onChangeImportFile = file => {
     file &&
       this.setState({
@@ -22,6 +23,7 @@ class UploadFileForm extends Component {
         options: { ...this.state.options, filename: file.name }
       });
   };
+
   handleDragEnter = () => this.setState({ isDragging: true }); // <---
   handleDragLeave = () => this.setState({ isDragging: false }); // <---
   handleDrop = e => {
@@ -31,6 +33,7 @@ class UploadFileForm extends Component {
     const file = e.dataTransfer.files[0];
     this.onChangeImportFile(file);
   };
+  
   readFileContent = file => {
     const reader = new FileReader();
     return new Promise((resolve, reject) => {
