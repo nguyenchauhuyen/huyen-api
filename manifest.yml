@@ -1,6 +1,6 @@
 applications:
-- name: huyen-api
-  host: huyen-api
+- name: simdep4g
+  host: simdep4g
   path: .
   domain: mybluemix.net
   memory: 256M
