@@ -2,7 +2,7 @@
   "kind": "collectionType",
   "collectionName": "products",
   "info": {
-    "name": "Product",
+    "name": "Sản phẩm",
     "description": ""
   },
   "options": {

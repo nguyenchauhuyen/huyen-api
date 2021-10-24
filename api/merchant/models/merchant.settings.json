@@ -2,7 +2,7 @@
   "kind": "collectionType",
   "collectionName": "merchants",
   "info": {
-    "name": "Merchant",
+    "name": "Đại lý",
     "description": ""
   },
   "options": {

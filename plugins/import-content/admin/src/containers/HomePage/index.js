@@ -5,7 +5,6 @@
  */
 import {
   HeaderNav,
-  LoadingIndicator,
   PluginHeader
 } from "strapi-helper-plugin";
 import Row from "../../components/Row";
@@ -17,15 +16,16 @@ const getUrl = to =>
   to ? `/plugins/${pluginId}/${to}` : `/plugins/${pluginId}`;
 import React, { memo, Component } from "react";
 import { request } from "strapi-helper-plugin";
-import PropTypes from "prop-types";
 import pluginId from "../../pluginId";
 import UploadFileForm from "../../components/UploadFileForm";
 import MappingTable from "../../components/MappingTable";
 import { Button } from "@buffetjs/core";
-
+import { LoadingBar } from '@buffetjs/styles';
+// import { Select as Autocomplete } from 'react-select';
 class HomePage extends Component {
   state = {
     loading: true,
+    saving: false,
     modelOptions: [],
     models: [],
     merchantOptions: [],
@@ -45,7 +45,6 @@ class HomePage extends Component {
   ];
 
   getModels = async () => {
-    this.setState({ loading: true });
     try {
       const response = await request("/content-type-builder/content-types", {
         method: "GET"
@@ -61,20 +60,14 @@ class HomePage extends Component {
           value: model.uid // (uid is used for table creations)
         };
       });
-
-      this.setState({ loading: false });
-
       return { models, modelOptions };
     } catch (e) {
-      this.setState({ loading: false }, () => {
-        strapi.notification.error(`${e}`);
-      });
+      strapi.notification.error(`${e}`);
     }
     return [];
   };
 
   getMerchants = async () => {
-    this.setState({ loading: true });
     try {
       const merchants = await request("/merchants?_sort=name:asc&_limit=1000", {
         method: "GET"
@@ -85,14 +78,9 @@ class HomePage extends Component {
           value: model.id // (uid is used for table creations)
         };
       });
-
-      this.setState({ loading: false });
-
       return { merchants, merchantOptions };
     } catch (e) {
-      this.setState({ loading: false }, () => {
-        strapi.notification.error(`${e}`);
-      });
+      strapi.notification.error(`${e}`);
     }
     return [];
   };
@@ -209,6 +197,7 @@ class HomePage extends Component {
       analysis
     } = this.state;
     const { analysisConfig } = this;
+    this.setState({ saving: true });
 
     let defaultMapping = fieldMapping;
     analysis.fieldStats.forEach(field => {
@@ -219,18 +208,18 @@ class HomePage extends Component {
     const importConfig =
       selectedContentType === "application::product.product"
         ? {
-            ...analysisConfig,
-            contentType: selectedContentType,
-            merchant: selectedMerchant,
-            fieldMapping: {
-              ...defaultMapping
-            }
+          ...analysisConfig,
+          contentType: selectedContentType,
+          merchant: selectedMerchant,
+          fieldMapping: {
+            ...defaultMapping
           }
+        }
         : {
-            ...analysisConfig,
-            contentType: selectedContentType,
-            fieldMapping
-          };
+          ...analysisConfig,
+          contentType: selectedContentType,
+          fieldMapping
+        };
     try {
       await request("/import-content", {
         method: "POST",
@@ -253,15 +242,17 @@ class HomePage extends Component {
         modelOptions,
         selectedContentType: modelOptions ? "application::product.product" : ""
       });
-    });
 
-    this.getMerchants().then(res => {
-      const { merchants, merchantOptions } = res;
-      this.setState({
-        merchants,
-        merchantOptions,
-        selectedMerchant: merchantOptions ? merchantOptions[0].value : ""
+      this.getMerchants().then(res => {
+        const { merchants, merchantOptions } = res;
+        this.setState({
+          loading: false,
+          merchants,
+          merchantOptions,
+          selectedMerchant: merchantOptions ? merchantOptions[0].value : ""
+        });
       });
+
     });
   }
 
@@ -286,7 +277,7 @@ class HomePage extends Component {
           style={{ marginTop: "4.4rem" }}
         />
         <div className="row">
-          <Block
+          {!this.state.loading && <Block
             title="General"
             description="Configure the Import Source & Destination"
             style={{ marginBottom: 12 }}
@@ -324,13 +315,26 @@ class HomePage extends Component {
                     this.selectMerchant(value)
                   }
                 />
+                {/* <Autocomplete
+                  className="basic-single"
+                  classNamePrefix="select"
+                  // defaultValue={this.state.selectedMerchant}
+                  // isDisabled={isDisabled}
+                  // isLoading={isLoading}
+                  // isClearable={isClearable}
+                  // isRtl={isRtl}
+                  isSearchable={true}
+                  name="importMerchant"
+                  options={this.state.merchantOptions}
+                /> */}
               </div>
             </Row>
             <UploadFileForm
               onRequestAnalysis={this.onRequestAnalysis}
               loadingAnalysis={this.state.analyzing}
             />
-          </Block>
+          </Block>}
+          {this.state.loading && <Block><LoadingBar /></Block>}
         </div>
         {this.state.analysis && (
           <Row className="row">
@@ -343,6 +347,7 @@ class HomePage extends Component {
               style={{ marginTop: 12 }}
               label={"Run the Import"}
               onClick={this.onSaveImport}
+              isLoading={this.state.saving}
             />
           </Row>
         )}
