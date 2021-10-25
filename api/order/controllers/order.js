@@ -20,6 +20,7 @@ module.exports = {
           text: `The product ${entity.product.name} has been booked.
 Customer Name: ${entity.customerName}
 Customer Phone: ${entity.customerPhone}
+Customer Email: ${entity.customerEmail}
 Customer Address: ${entity.customerAddress}
 Total Amount: ${entity.amount}
 Note: ${entity.bookingNote}`
