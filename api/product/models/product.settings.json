@@ -2,8 +2,8 @@
   "kind": "collectionType",
   "collectionName": "products",
   "info": {
-    "name": "Sản phẩm",
-    "description": ""
+    "name": "Product",
+    "description": "Sản phẩm"
   },
   "options": {
     "increments": true,
