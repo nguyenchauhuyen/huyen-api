@@ -1,7 +1,7 @@
 /*
- *
- * HomePage
- *
+*
+* HomePage
+*
  */
 import {
   HeaderNav,
@@ -11,6 +11,7 @@ import Row from "../../components/Row";
 import Block from "../../components/Block";
 import { Select, Label } from "@buffetjs/core";
 import { get, has, isEmpty, pickBy, set } from "lodash";
+import styled from "styled-components";
 
 const getUrl = to =>
   to ? `/plugins/${pluginId}/${to}` : `/plugins/${pluginId}`;
@@ -21,7 +22,7 @@ import UploadFileForm from "../../components/UploadFileForm";
 import MappingTable from "../../components/MappingTable";
 import { Button } from "@buffetjs/core";
 import { LoadingBar } from '@buffetjs/styles';
-// import { Select as Autocomplete } from 'react-select';
+import Autocomplete from 'react-select';
 class HomePage extends Component {
   state = {
     loading: true,
@@ -43,6 +44,14 @@ class HomePage extends Component {
     { label: "Upload file", value: "upload" },
     { label: "Raw text", value: "raw" }
   ];
+
+  // customStyles = {
+  //   control: base => ({
+  //     ...base,
+  //     height: 34,
+  //     minHeight: 34
+  //   })
+  // };
 
   getModels = async () => {
     try {
@@ -197,46 +206,50 @@ class HomePage extends Component {
       analysis
     } = this.state;
     const { analysisConfig } = this;
-    this.setState({ saving: true });
 
-    let defaultMapping = fieldMapping;
-    analysis.fieldStats.forEach(field => {
-      if (!fieldMapping[field.fieldName]) {
-        defaultMapping[field.fieldName] = { targetField: field.fieldName };
-      }
-    });
-    const importConfig =
-      selectedContentType === "application::product.product"
-        ? {
-          ...analysisConfig,
-          contentType: selectedContentType,
-          merchant: selectedMerchant,
-          fieldMapping: {
-            ...defaultMapping
-          }
+    if (!!selectedMerchant) {
+      this.setState({ saving: true });
+      let defaultMapping = fieldMapping;
+      analysis.fieldStats.forEach(field => {
+        if (!fieldMapping[field.fieldName]) {
+          defaultMapping[field.fieldName] = { targetField: field.fieldName };
         }
-        : {
-          ...analysisConfig,
-          contentType: selectedContentType,
-          fieldMapping
-        };
-    try {
-      await request("/import-content", {
-        method: "POST",
-        body: importConfig
       });
-      this.setState({ saving: false }, () => {
-        strapi.notification.info("Import started");
-      });
-    } catch (e) {
-      strapi.notification.error(`${e}`);
+      const importConfig =
+        selectedContentType === "application::product.product"
+          ? {
+            ...analysisConfig,
+            contentType: selectedContentType,
+            merchant: selectedMerchant.value,
+            fieldMapping: {
+              ...defaultMapping
+            }
+          }
+          : {
+            ...analysisConfig,
+            contentType: selectedContentType,
+            fieldMapping
+          };
+      try {
+        await request("/import-content", {
+          method: "POST",
+          body: importConfig
+        });
+        console.log(selectedMerchant)
+        this.setState({ saving: false }, () => {
+          strapi.notification.info("Import started");
+        });
+      } catch (e) {
+        strapi.notification.error(`${e}`);
+      }
+    } else {
+      strapi.notification.error(`Please select Merchant`);
     }
   };
 
   componentDidMount() {
     this.getModels().then(res => {
       const { models, modelOptions } = res;
-      // console.log(modelOptions)
       this.setState({
         models,
         modelOptions,
@@ -249,12 +262,13 @@ class HomePage extends Component {
           loading: false,
           merchants,
           merchantOptions,
-          selectedMerchant: merchantOptions ? merchantOptions[0].value : ""
         });
+        // selectedMerchant: merchantOptions ? merchantOptions[0].value : ""
       });
 
     });
   }
+
 
   render() {
     return (
@@ -307,26 +321,24 @@ class HomePage extends Component {
               </div>
               <div className={"col-4"}>
                 <Label htmlFor="importMerchant">Merchant</Label>
-                <Select
+                {/* <Select
                   value={this.state.selectedMerchant}
                   name="importMerchant"
                   options={this.state.merchantOptions}
                   onChange={({ target: { value } }) =>
                     this.selectMerchant(value)
                   }
-                />
-                {/* <Autocomplete
-                  className="basic-single"
+                /> */}
+                <SearchDropdown
+                  // className="basic-single"
                   classNamePrefix="select"
-                  // defaultValue={this.state.selectedMerchant}
-                  // isDisabled={isDisabled}
-                  // isLoading={isLoading}
-                  // isClearable={isClearable}
+                  isClearable={true}
                   // isRtl={isRtl}
                   isSearchable={true}
                   name="importMerchant"
                   options={this.state.merchantOptions}
-                /> */}
+                  onChange={this.selectMerchant}
+                />
               </div>
             </Row>
             <UploadFileForm
@@ -355,4 +367,13 @@ class HomePage extends Component {
     );
   }
 }
+
+const SearchDropdown = styled(Autocomplete)`
+  .select__control {
+    height: 34px;
+    min-height:34px;
+  }
+`
+
 export default memo(HomePage);
+
