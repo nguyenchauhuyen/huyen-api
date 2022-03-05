@@ -98,7 +98,7 @@ class HomePage extends Component {
     this.analysisConfig = analysisConfig;
     this.setState({ analyzing: true }, async () => {
       try {
-        console.log(analysisConfig);
+        console.log(analysisConfig, '===Config');
         let analysis = {};
 
         if (this.state.selectedContentType === "application::product.product") {

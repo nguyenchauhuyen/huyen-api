@@ -85,39 +85,45 @@ const getItemsFromData = ({ dataType, body, options, merchant }) =>
       return resolve({ sourceType: "rss", items: feed.items });
     }
     if (dataType === "text/csv" || dataType === "application/vnd.ms-excel") {
-      const items = CsvParser(body, {
-        ...options,
-        columns: true
-      });
-      if (merchant) {
-        return resolve({
-          sourceType: "csv",
-          items: items.map(item => {
-            if (item.name && merchant) {
-              let name = item.name.trim();
-              if (name.charAt(0) !== "0") {
-                name = "0" + name;
-              }
-              item.price = item.price.replace(/[ ,.]/g, "");
-              item.displayName = name.replace(/[ ,]/g, ".");
-              item.name = name.replace(/[ ,.]/g, "");
-              const cat = CATEGORIES.filter(e => {
-                return e.list.indexOf(item.name.slice(0, 3)) > -1;
-              });
-              if (cat.length) {
-                item.category = cat[0].name;
-              } else {
-                item.category = "Điện Thoại Bàn";
-              }
-            }
-            return {
-              ...item,
-              merchant
-            };
-          })
+      console.log(options, '<=== OPTIONS')
+      try {
+        const items = CsvParser(body, {
+          ...options,
+          columns: true
         });
-      } else {
-        return resolve({ sourceType: "csv", items });
+        if (merchant) {
+          return resolve({
+            sourceType: "csv",
+            items: items.map(item => {
+              if (item.name && merchant) {
+                let name = item.name.trim();
+                if (name.charAt(0) !== "0") {
+                  name = "0" + name;
+                }
+                item.price = item.price.replace(/[ ,.]/g, "");
+                item.displayName = name.replace(/[ ,]/g, ".");
+                item.name = name.replace(/[ ,.]/g, "");
+                const cat = CATEGORIES.filter(e => {
+                  return e.list.indexOf(item.name.slice(0, 3)) > -1;
+                });
+                if (cat.length) {
+                  item.category = cat[0].name;
+                } else {
+                  item.category = "Điện Thoại Bàn";
+                }
+              }
+              return {
+                ...item,
+                merchant
+              };
+            })
+          });
+        } else {
+          return resolve({ sourceType: "csv", items });
+        }
+      }
+      catch (error) {
+        reject(error);
       }
     }
     reject({

@@ -10,7 +10,7 @@ const { resolveDataFromRequest, getItemsFromData } = require("./utils/utils");
 const analyzer = require("./utils/analyzer");
 const _ = require("lodash");
 const importFields = require("./utils/importFields");
-const importMediaFiles = require("./utils/importMediaFiles");
+// const importMediaFiles = require("./utils/importMediaFiles");
 
 const import_queue = {};
 const importNextItem = async importConfig => {
@@ -27,22 +27,25 @@ const importNextItem = async importConfig => {
       sourceItem,
       importConfig.fieldMapping
     );
+
     console.log("==>", importedItem);
-    const savedContent = await strapi
+
+    await strapi
       .query(importConfig.contentType)
       .create(importedItem);
-    const uploadedFiles = await importMediaFiles(
-      savedContent,
-      sourceItem,
-      importConfig
-    );
-    const fileIds = _.map(_.flatten(uploadedFiles), "id");
-    await strapi.query("importeditem", "import-content").create({
-      importconfig: importConfig.id,
-      ContentId: savedContent.id,
-      ContentType: importConfig.contentType,
-      importedFiles: { fileIds }
-    });
+
+    // const uploadedFiles = await importMediaFiles(
+    //   savedContent,
+    //   sourceItem,
+    //   importConfig
+    // );
+    // const fileIds = _.map(_.flatten(uploadedFiles), "id");
+    // await strapi.query("importeditem", "import-content").create({
+    //   importconfig: importConfig.id,
+    //   ContentId: savedContent.id,
+    //   ContentType: importConfig.contentType,
+    //   importedFiles: { fileIds }
+    // });
   } catch (e) {
     console.log(e);
   }
@@ -127,15 +130,16 @@ module.exports = {
               .count({ merchant: merchant });
           }
         }
+        resolve({
+          status: "import started",
+          importConfigId: importConfig.id
+        });
+  
+        importNextItem(importConfig);
       } catch (error) {
+        console.log(error, 'ERROR')
         reject(error);
       }
-      resolve({
-        status: "import started",
-        importConfigId: importConfig.id
-      });
-
-      importNextItem(importConfig);
     });
   },
   undoItems: importConfig =>

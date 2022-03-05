@@ -10,12 +10,16 @@ class UploadFileForm extends Component {
     file: null,
     type: 'text/csv',
     options: {
-      filename: null
+      trim: true,
+      skip_empty_lines: true,
+      skip_records_with_error: true,
+      relax_column_count: true
     },
     isDragging: false
   };
 
   onChangeImportFile = file => {
+    console.log(this.state.options)
     file &&
       this.setState({
         file,
