@@ -35,7 +35,7 @@ module.exports = {
         category: ctx.query.category || null,
         _start: parseInt(ctx.query._start) || 0,
         _limit: parseInt(ctx.query._limit) || 100,
-        _sort: ctx.query._sort || "price:asc"
+        _sort: ctx.query._sort || "id:desc"
       };
       entities = await strapi.services.product.find(query);
     } else {

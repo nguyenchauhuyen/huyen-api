@@ -25,9 +25,14 @@ module.exports = {
     const record = await strapi
       .query("importconfig", "import-content")
       .create(importConfig);
-    console.log("create", record);
-    await services["import-content"].importItems(record, ctx);
-    ctx.send(record);
+    console.log("create =>", record);
+    try {
+      await services["import-content"].importItems(record, ctx);
+      ctx.send(record);
+    } catch(error) {
+      ctx.response.status = 406;
+      ctx.response.message = "could not parse: " + error;
+    }
   },
   index: async ctx => {
     const entries = await strapi.query("importconfig", "import-content").find();
