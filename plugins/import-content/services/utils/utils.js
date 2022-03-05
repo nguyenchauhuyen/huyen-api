@@ -91,10 +91,11 @@ const getItemsFromData = ({ dataType, body, options, merchant }) =>
           ...options,
           columns: true
         });
+        const filteredItems = items.filter(e => e.name && e.price && e.price.length > 5);
         if (merchant) {
           return resolve({
             sourceType: "csv",
-            items: items.map(item => {
+            items: filteredItems.map(item => {
               if (item.name && merchant) {
                 let name = item.name.trim();
                 if (name.charAt(0) !== "0") {
@@ -123,7 +124,7 @@ const getItemsFromData = ({ dataType, body, options, merchant }) =>
         }
       }
       catch (error) {
-        reject(error);
+        reject(new Error(error));
       }
     }
     reject({

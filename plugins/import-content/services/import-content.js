@@ -138,7 +138,7 @@ module.exports = {
         importNextItem(importConfig);
       } catch (error) {
         console.log(error, 'ERROR')
-        reject(error);
+        reject(new Error(error));
       }
     });
   },
