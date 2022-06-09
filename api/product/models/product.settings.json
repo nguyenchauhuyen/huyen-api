@@ -31,10 +31,6 @@
       "model": "merchant",
       "index": true
     },
-    "blocked": {
-      "type": "boolean",
-      "default": false
-    },
     "category": {
       "type": "enumeration",
       "enum": [
