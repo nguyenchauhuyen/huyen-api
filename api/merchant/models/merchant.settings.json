@@ -24,6 +24,18 @@
       "type": "string",
       "unique": true,
       "required": true
+    },
+    "website": {
+      "type": "string"
+    },
+    "zalo": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "note": {
+      "type": "richtext"
     }
   }
 }
