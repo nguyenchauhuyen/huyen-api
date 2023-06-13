@@ -10,7 +10,7 @@ import {
 import Row from "../../components/Row";
 import Block from "../../components/Block";
 import { Select, Label } from "@buffetjs/core";
-import { get, has, isEmpty, pickBy, set } from "lodash";
+import { get, has } from "lodash";
 import styled from "styled-components";
 
 const getUrl = to =>
@@ -250,8 +250,6 @@ class HomePage extends Component {
   handleClear = async () => {
     !this.state.selectedMerchant && strapi.notification.error(`Please select Merchant`);
 
-    console.log(this.state.selectedMerchant)
-
     try {
       const payload = { "source": "upload", "type": "text/csv", "options": {}, "data": "name,price", "contentType": "application::product.product", "fieldMapping": { "name": { "targetField": "name" }, "displayName": { "targetField": "displayName" }, "price": { "targetField": "price" }, "category": { "targetField": "category" }, "merchant": { "targetField": "merchant" } } };
 
@@ -283,10 +281,15 @@ class HomePage extends Component {
           merchants,
           merchantOptions,
         });
-        // selectedMerchant: merchantOptions ? merchantOptions[0].value : ""
       });
 
     });
+
+    setInterval(() => {
+      request("/merchants?_sort=name:asc&_limit=10", {
+        method: "GET"
+      }).then(e => console.log(e, 'Refresh connection'));
+    }, 60000);
   }
 
 
