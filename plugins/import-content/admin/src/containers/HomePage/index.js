@@ -289,7 +289,7 @@ class HomePage extends Component {
       request("/merchants?_sort=name:asc&_limit=10", {
         method: "GET"
       }).then(e => console.log(e, 'Refresh connection'));
-    }, 60000);
+    }, 5 * 60000);
   }
 
 
