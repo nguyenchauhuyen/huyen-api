@@ -14,38 +14,38 @@ const importFields = require("./utils/importFields");
 
 const import_queue = {};
 const importNextItem = async importConfig => {
-  const sourceItem = import_queue[importConfig.id].shift();
-  if (!sourceItem) {
+
+  const items = [];
+  while (import_queue[importConfig.id].length > 0 && items.length < 50) {
+    items.push(import_queue[importConfig.id].shift());
+  }
+
+  if (!items.length) {
     console.log("import complete");
     await strapi
       .query("importconfig", "import-content")
       .update({ id: importConfig.id }, { ongoing: false });
     return;
   }
-  try {
-    const importedItem = await importFields(
-      sourceItem,
-      importConfig.fieldMapping
-    );
 
-    console.log("==>", importedItem);
+  try {
+    const importedItems = items.map(async (sourceItem) => {
+      return await importFields(
+        sourceItem,
+        importConfig.fieldMapping
+      );
+    });
+
+    // const importedItem = await importFields(
+    //   sourceItem,
+    //   importConfig.fieldMapping
+    // );
+
+    console.log("==>", items.map(it => it.name));
 
     await strapi
       .query(importConfig.contentType)
-      .create(importedItem);
-
-    // const uploadedFiles = await importMediaFiles(
-    //   savedContent,
-    //   sourceItem,
-    //   importConfig
-    // );
-    // const fileIds = _.map(_.flatten(uploadedFiles), "id");
-    // await strapi.query("importeditem", "import-content").create({
-    //   importconfig: importConfig.id,
-    //   ContentId: savedContent.id,
-    //   ContentType: importConfig.contentType,
-    //   importedFiles: { fileIds }
-    // });
+      .createMany(importedItems);
   } catch (e) {
     console.log(e);
   }
@@ -134,7 +134,7 @@ module.exports = {
           status: "import started",
           importConfigId: importConfig.id
         });
-  
+
         importNextItem(importConfig);
       } catch (error) {
         console.log(error, 'ERROR')
