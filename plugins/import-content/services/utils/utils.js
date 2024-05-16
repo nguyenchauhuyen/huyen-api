@@ -44,6 +44,61 @@ const CATEGORIES = [
   { name: "iTelecom", list: ["087"] }
 ];
 
+const getCategoryName = (prefix) => {
+  switch (prefix) {
+    //"091", "094", "088", "081", "082", "083", "084", "085"
+    case '091':
+    case '094':
+    case '088':
+    case '081':
+    case '082':
+    case '083':
+    case '084':
+    case '085':
+      return 'Vinaphone';
+    //"090", "093", "089", "070", "076", "077", "078", "079"
+    case '090':
+    case '093':
+    case '089':
+    case '070':
+    case '076':
+    case '077':
+    case '078':
+    case '079':
+
+      return 'Mobifone'
+    case "096":
+    case "097":
+    case "098":
+    case "086":
+    case "032":
+    case "033":
+    case "034":
+    case "035":
+    case "036":
+    case "037":
+    case "038":
+    case "039":
+      return 'Viettel';
+    case '092': //"092", "052", "053", "054", "055", "056", "057", "058"
+    case '052':
+    case '053':
+    case '054':
+    case '055':
+    case '056':
+    case '057':
+    case '058':
+      return 'Vietnamobile';
+    case '099':
+    case '059':
+      return 'Gmobile';
+    case '087':
+      return 'iTelecom';
+    default:
+      return 'Homephone';
+  }
+}
+
 const stringIsEmail = data => {
   EMAIL_REGEXP.lastIndex = 0;
   return EMAIL_REGEXP.test(data);
@@ -169,5 +224,6 @@ module.exports = {
   getItemsFromData,
   getDataFromUrl,
   stringIsEmail,
-  urlIsMedia
+  urlIsMedia,
+  getCategoryName
 };
