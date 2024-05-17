@@ -70,7 +70,7 @@ const importNextItem = async (importConfig, merchant) => {
     console.log(e);
   }
   const { IMPORT_THROTTLE } = strapi.plugins["import-content"].config;
-  setTimeout(() => importNextItem(importConfig), IMPORT_THROTTLE || 0);
+  setTimeout(() => importNextItem(importConfig, merchant), IMPORT_THROTTLE || 0);
 };
 
 const undo_queue = {};
