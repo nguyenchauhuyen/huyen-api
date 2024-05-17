@@ -118,16 +118,12 @@ const resolveDataFromRequest = async ctx => {
   const { source, type, options, data, merchant } = ctx.request.body;
   switch (source) {
     case "upload":
+    case "raw":
       return { dataType: type, body: data, options, merchant };
     case "url":
       const { dataType, body } = await getDataFromUrl(options.url);
       return { dataType, body, options };
-    case "raw":
-      return {
-        dataType: type,
-        body: options.rawText,
-        options
-      };
+
   }
 };
 

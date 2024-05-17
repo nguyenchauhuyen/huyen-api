@@ -34,11 +34,12 @@ class HomePage extends Component {
         models: [],
         merchantOptions: [],
         merchants: [],
-        importSource: "upload",
+        importSource: "raw",
         analyzing: false,
         analysis: null,
         selectedContentType: "application::product.product",
         selectedMerchant: "",
+        selectedDelimiter: '\t',
         fieldMapping: {},
         showDeleteModal: false,
         csvData: "",
@@ -50,13 +51,12 @@ class HomePage extends Component {
         { label: "Raw text", value: "raw" }
     ];
 
-    // customStyles = {
-    //   control: base => ({
-    //     ...base,
-    //     height: 34,
-    //     minHeight: 34
-    //   })
-    // };
+    delimiterTypes = [
+        { label: 'Tab', value: '\t' },
+        { label: ',', value: ',' },
+        { label: '|', value: '|' },
+        { label: ';', value: ';' },
+    ]
 
     getModels = async () => {
         try {
@@ -190,8 +190,11 @@ class HomePage extends Component {
         this.setState({ selectedMerchant });
     };
 
+    selectDelimiter = selectedDelimiter => {
+        this.setState({ selectedDelimiter })
+    }
+
     csvDataChange = (e) => {
-        console.log(e.target)
         this.setState({ csvData: e.target.value });
     }
 
@@ -215,45 +218,63 @@ class HomePage extends Component {
             fieldMapping,
             analysis
         } = this.state;
-        const { analysisConfig } = this;
+        // const { analysisConfig } = this;
 
-        if (!!selectedMerchant) {
-            this.setState({ saving: true });
-            let defaultMapping = fieldMapping;
-            analysis.fieldStats.forEach(field => {
-                if (!fieldMapping[field.fieldName]) {
-                    defaultMapping[field.fieldName] = { targetField: field.fieldName };
-                }
-            });
-            const importConfig =
-                selectedContentType === "application::product.product"
-                    ? {
-                        ...analysisConfig,
-                        contentType: selectedContentType,
-                        merchant: selectedMerchant.value,
-                        fieldMapping: {
-                            ...defaultMapping
-                        }
-                    }
-                    : {
-                        ...analysisConfig,
-                        contentType: selectedContentType,
-                        fieldMapping
-                    };
-            try {
+        // if (!!selectedMerchant) {
+        //     this.setState({ saving: true });
+        //     let defaultMapping = fieldMapping;
+        //     analysis.fieldStats.forEach(field => {
+        //         if (!fieldMapping[field.fieldName]) {
+        //             defaultMapping[field.fieldName] = { targetField: field.fieldName };
+        //         }
+        //     });
+        //     const importConfig =
+        //         selectedContentType === "application::product.product"
+        //             ? {
+        //                 ...analysisConfig,
+        //                 contentType: selectedContentType,
+        //                 merchant: selectedMerchant.value,
+        //                 fieldMapping: {
+        //                     ...defaultMapping
+        //                 }
+        //             }
+        //             : {
+        //                 ...analysisConfig,
+        //                 contentType: selectedContentType,
+        //                 fieldMapping
+        //             };
+        //     try {
+        //         await request("/import-content", {
+        //             method: "POST",
+        //             body: importConfig
+        //         });
+        //         console.log(selectedMerchant)
+        //         this.setState({ saving: false }, () => {
+        //             strapi.notification.info("Import started");
+        //         });
+        //     } catch (e) {
+        //         strapi.notification.error(`${e}`);
+        //     }
+        // } else {
+        //     strapi.notification.error(`Please select Merchant`);
+        // }
+
+        try {
+            const payload = { "source": analysis.sourceType, "type": "text/csv", "options": {}, "data": analysis.data, "contentType": selectedContentType, "fieldMapping": { "name": { "targetField": "name" }, "displayName": { "targetField": "displayName" }, "price": { "targetField": "price" }, "category": { "targetField": "category" }, "merchant": { "targetField": "merchant" } } };
+
+            if (selectedMerchant) {
                 await request("/import-content", {
                     method: "POST",
-                    body: importConfig
+                    body: { ...payload, merchant: selectedMerchant.value }
                 });
-                console.log(selectedMerchant)
                 this.setState({ saving: false }, () => {
                     strapi.notification.info("Import started");
                 });
-            } catch (e) {
-                strapi.notification.error(`${e}`);
+            } else {
+                strapi.notification.error(`Please select Merchant`);
             }
-        } else {
-            strapi.notification.error(`Please select Merchant`);
+        } catch (e) {
+            strapi.notification.error(`${e}`);
         }
     };
 
@@ -297,31 +318,39 @@ class HomePage extends Component {
     }
 
     handleParseCSV = async () => {
-        const results = Papa.parse(`name	price
+        const results = Papa.parse(`name${this.state.selectedDelimiter}price
 ${this.state.csvData}`, {
-            delimiter: "\t",
+            delimiter: this.state.selectedDelimiter,
             header: true,
             newline: "",
+            // delimitersToGuess: ['\t', ',', '|', ';']
         });
         console.log(results);
 
-        try {
-            const payload = { "source": "upload", "type": "text/csv", "options": {}, "data": results.data, "contentType": "application::product.product", "fieldMapping": { "name": { "targetField": "name" }, "displayName": { "targetField": "displayName" }, "price": { "targetField": "price" }, "category": { "targetField": "category" }, "merchant": { "targetField": "merchant" } } };
+        let analysis = {
+            sourceType: 'raw',
+            data: results.data,
+            fieldStats: [
+                {
+                    fieldName: "name",
+                    count: results.data?.filter(it => it.name?.length).length,
+                    format: "string",
+                    minLength: 1,
+                    maxLength: 200
+                },
+                {
+                    fieldName: "price",
+                    count: results.data?.filter(it => it.price?.length).length,
+                    format: "string",
+                    minLength: 1,
+                    maxLength: 200
+                },
+            ]
+        };
 
-            if (this.state.selectedMerchant) {
-                await request("/import-content", {
-                    method: "POST",
-                    body: { ...payload, merchant: this.state.selectedMerchant.value }
-                });
-                this.setState({ saving: false }, () => {
-                    strapi.notification.info("Import started");
-                });
-            } else {
-                strapi.notification.error(`Please select Merchant`);
-            }
-        } catch (e) {
-            strapi.notification.error(`${e}`);
-        }
+        this.setState({ analysis, analyzing: false }, () => {
+            strapi.notification.success(`Analyzed Successfully`);
+        });
 
     }
 
@@ -352,7 +381,7 @@ ${this.state.csvData}`, {
                         style={{ marginBottom: 12 }}
                     >
                         <Row className={"row"}>
-                            <div className={"col-4"}>
+                            <div className={"col-3"}>
                                 <Label htmlFor="importSource">Import Source</Label>
                                 <Select
                                     name="importSource"
@@ -363,7 +392,7 @@ ${this.state.csvData}`, {
                                     }
                                 />
                             </div>
-                            <div className={"col-4"}>
+                            <div className={"col-3"}>
                                 <Label htmlFor="importDest">Import Destination</Label>
                                 <Select
                                     value={this.state.selectedContentType}
@@ -374,7 +403,18 @@ ${this.state.csvData}`, {
                                     }
                                 />
                             </div>
-                            <div className={"col-4"}>
+                            <div className={"col-3"}>
+                                <Label htmlFor="importDest">Import Delimiter</Label>
+                                <Select
+                                    value={this.state.selectedDelimiter}
+                                    name="importDelimiter"
+                                    options={this.delimiterTypes}
+                                    onChange={({ target: { value } }) =>
+                                        this.selectDelimiter(value)
+                                    }
+                                />
+                            </div>
+                            <div className={"col-3"}>
                                 <Label htmlFor="importMerchant">Merchant</Label>
 
                                 <SearchDropdown
@@ -404,7 +444,7 @@ ${this.state.csvData}`, {
                                     height: '50vh',
                                     margin: '16px 0',
                                     padding: '16px',
-                                    border: 'solid 1px #ccc;'
+                                    border: 'solid 1px #ccc'
                                 }}
                                     type="textarea" name="importContent" value={this.state.csvData} onChange={this.csvDataChange} />
                             </div>
