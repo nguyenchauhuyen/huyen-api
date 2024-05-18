@@ -6,17 +6,17 @@
  * @description: A set of functions similar to controller's actions to avoid code duplication.
  */
 
-const { resolveDataFromRequest, getItemsFromData } = require("./utils/utils");
+const { resolveDataFromRequest, getItemsFromData, getCategoryName } = require("./utils/utils");
 const analyzer = require("./utils/analyzer");
 const _ = require("lodash");
 const importFields = require("./utils/importFields");
 // const importMediaFiles = require("./utils/importMediaFiles");
 
 const import_queue = {};
-const importNextItem = async importConfig => {
+const importNextItem = async (importConfig, merchant) => {
 
   const items = [];
-  while (import_queue[importConfig.id].length > 0 && items.length < 50) {
+  while (import_queue[importConfig.id].length > 0 && items.length < 100) {
     items.push(import_queue[importConfig.id].shift());
   }
 
@@ -30,8 +30,28 @@ const importNextItem = async importConfig => {
 
   try {
     const importedItems = items.map(async (sourceItem) => {
+      let name = sourceItem.name.trim();
+      if (name.charAt(0) !== "0") {
+        name = "0" + name;
+      }
+      let shortName = name.replace(/[ ,.]/g, "");
+      // const cat = CATEGORIES.filter(e => {
+      //   return e.list.indexOf(shortName.slice(0, 3)) > -1;
+      // });
+      // if (cat.length) {
+      //   sourceItem.category = cat[0].name;
+      // } else {
+      //   sourceItem.category = "Noname";
+      // }
+
       return await importFields(
-        sourceItem,
+        {
+          name: shortName,
+          price: sourceItem.price.replace(/[ ,.]/g, ""),
+          displayName: name.replace(/[ ,]/g, "."),
+          category: getCategoryName(shortName.slice(0, 3)),
+          merchant
+        },
         importConfig.fieldMapping
       );
     });
@@ -50,7 +70,7 @@ const importNextItem = async importConfig => {
     console.log(e);
   }
   const { IMPORT_THROTTLE } = strapi.plugins["import-content"].config;
-  setTimeout(() => importNextItem(importConfig), IMPORT_THROTTLE || 0);
+  setTimeout(() => importNextItem(importConfig, merchant), IMPORT_THROTTLE || 0);
 };
 
 const undo_queue = {};
@@ -106,13 +126,13 @@ module.exports = {
     new Promise(async (resolve, reject) => {
       const { dataType, body, merchant } = await resolveDataFromRequest(ctx);
       try {
-        const { items } = await getItemsFromData({
-          dataType,
-          body,
-          options: importConfig.options,
-          merchant
-        });
-        import_queue[importConfig.id] = items;
+        // const { items } = await getItemsFromData({
+        //   dataType,
+        //   body,
+        //   options: importConfig.options,
+        //   merchant
+        // });
+        import_queue[importConfig.id] = body;
 
         if (merchant) {
           console.log("DELETE ALL", merchant);
@@ -135,7 +155,7 @@ module.exports = {
           importConfigId: importConfig.id
         });
 
-        importNextItem(importConfig);
+        importNextItem(importConfig, merchant);
       } catch (error) {
         console.log(error, 'ERROR')
         reject(new Error(error));
