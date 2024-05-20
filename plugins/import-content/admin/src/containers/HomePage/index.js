@@ -40,6 +40,7 @@ class HomePage extends Component {
         selectedContentType: "application::product.product",
         selectedMerchant: "",
         selectedDelimiter: '\t',
+        selectedUnitPrice: '',
         fieldMapping: {},
         showDeleteModal: false,
         csvData: "",
@@ -56,6 +57,12 @@ class HomePage extends Component {
         { label: ',', value: ',' },
         { label: '|', value: '|' },
         { label: ';', value: ';' },
+    ]
+
+    unitPriceTypes = [
+        { label: 'Original', value: '' },
+        { label: 'X1000', value: '000' },
+        { label: 'X1000000', value: '000000' },
     ]
 
     getModels = async () => {
@@ -216,7 +223,8 @@ class HomePage extends Component {
             selectedContentType,
             selectedMerchant,
             fieldMapping,
-            analysis
+            analysis,
+            selectedUnitPrice
         } = this.state;
         // const { analysisConfig } = this;
 
@@ -260,9 +268,12 @@ class HomePage extends Component {
         // }
 
         try {
-            const payload = { "source": analysis.sourceType, "type": "text/csv", "options": {}, "data": analysis.data, "contentType": selectedContentType, "fieldMapping": { "name": { "targetField": "name" }, "displayName": { "targetField": "displayName" }, "price": { "targetField": "price" }, "category": { "targetField": "category" }, "merchant": { "targetField": "merchant" } } };
+
+            const data = selectedUnitPrice ? analysis.data.map(it => { return { name: it.name, price: `${it.price}${selectedUnitPrice}` } }) : analysis.data;
+            const payload = { "source": analysis.sourceType, "type": "text/csv", "options": {}, "data": data, "contentType": selectedContentType, "fieldMapping": { "name": { "targetField": "name" }, "displayName": { "targetField": "displayName" }, "price": { "targetField": "price" }, "category": { "targetField": "category" }, "merchant": { "targetField": "merchant" } } };
 
             if (selectedMerchant) {
+                this.setState({ saving: true });
                 await request("/import-content", {
                     method: "POST",
                     body: { ...payload, merchant: selectedMerchant.value }
@@ -381,7 +392,7 @@ ${this.state.csvData}`, {
                         style={{ marginBottom: 12 }}
                     >
                         <Row className={"row"}>
-                            <div className={"col-3"}>
+                            <div className={"col-2"}>
                                 <Label htmlFor="importSource">Import Source</Label>
                                 <Select
                                     name="importSource"
@@ -392,7 +403,7 @@ ${this.state.csvData}`, {
                                     }
                                 />
                             </div>
-                            <div className={"col-3"}>
+                            <div className={"col-2"}>
                                 <Label htmlFor="importDest">Import Destination</Label>
                                 <Select
                                     value={this.state.selectedContentType}
@@ -403,7 +414,7 @@ ${this.state.csvData}`, {
                                     }
                                 />
                             </div>
-                            <div className={"col-3"}>
+                            <div className={"col-2"}>
                                 <Label htmlFor="importDest">Import Delimiter</Label>
                                 <Select
                                     value={this.state.selectedDelimiter}
@@ -414,7 +425,18 @@ ${this.state.csvData}`, {
                                     }
                                 />
                             </div>
-                            <div className={"col-3"}>
+                            <div className={"col-2"}>
+                                <Label htmlFor="importPrice">Unit Price</Label>
+                                <Select
+                                    value={this.state.selectedUnitPrice}
+                                    name="importUnitPrice"
+                                    options={this.unitPriceTypes}
+                                    onChange={({ target: { value } }) =>
+                                        this.setState({ selectedUnitPrice: value })
+                                    }
+                                />
+                            </div>
+                            <div className={"col-2"}>
                                 <Label htmlFor="importMerchant">Merchant</Label>
 
                                 <SearchDropdown
