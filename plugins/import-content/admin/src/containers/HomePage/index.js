@@ -290,18 +290,21 @@ class HomePage extends Component {
     };
 
     handleClear = async () => {
-        !this.state.selectedMerchant && strapi.notification.error(`Please select Merchant`);
-
         try {
-            const payload = { "source": "upload", "type": "text/csv", "options": {}, "data": "name,price", "contentType": "application::product.product", "fieldMapping": { "name": { "targetField": "name" }, "displayName": { "targetField": "displayName" }, "price": { "targetField": "price" }, "category": { "targetField": "category" }, "merchant": { "targetField": "merchant" } } };
+            if (this.state.selectedMerchant) {
+                const payload = { "source": "upload", "type": "text/csv", "options": {}, "data": "name,price", "contentType": "application::product.product", "fieldMapping": { "name": { "targetField": "name" }, "displayName": { "targetField": "displayName" }, "price": { "targetField": "price" }, "category": { "targetField": "category" }, "merchant": { "targetField": "merchant" } } };
 
-            await request("/import-content", {
-                method: "POST",
-                body: { ...payload, merchant: this.state.selectedMerchant.value }
-            });
-            this.setState({ saving: false }, () => {
-                strapi.notification.info("Import started");
-            });
+                await request("/import-content", {
+                    method: "POST",
+                    body: { ...payload, merchant: this.state.selectedMerchant.value }
+                });
+                this.setState({ showDeleteModal: false }, () => {
+                    strapi.notification.info("Import started");
+                });
+            }
+            else {
+                strapi.notification.error(`Please select Merchant`);
+            }
         } catch (e) {
             strapi.notification.error(`${e}`);
         }
