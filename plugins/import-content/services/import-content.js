@@ -144,7 +144,7 @@ module.exports = {
             console.log(`${merchant} =>>`, count);
             await strapi
               .query(importConfig.contentType)
-              .delete({ merchant: merchant, _limit: 1000 });
+              .delete({ merchant: merchant, _limit: 500 });
             count = await strapi
               .query(importConfig.contentType)
               .count({ merchant: merchant });
