@@ -29,25 +29,17 @@ const importNextItem = async (importConfig, merchant) => {
   }
 
   try {
-    const importedItems = items.map(async (sourceItem) => {
+    const importedItems = items.filter(it => it.name && it.price).map(async (sourceItem) => {
       let name = sourceItem.name.trim();
       if (name.charAt(0) !== "0") {
         name = "0" + name;
       }
-      let shortName = name.replace(/[ ,.]/g, "");
-      // const cat = CATEGORIES.filter(e => {
-      //   return e.list.indexOf(shortName.slice(0, 3)) > -1;
-      // });
-      // if (cat.length) {
-      //   sourceItem.category = cat[0].name;
-      // } else {
-      //   sourceItem.category = "Noname";
-      // }
+      let shortName = name?.replace(/\D/g, "");
 
       return await importFields(
         {
           name: shortName,
-          price: sourceItem.price.replace(/[ ,.]/g, ""),
+          price: sourceItem.price.replace(/\D/g, ""),
           displayName: name.replace(/[ ,]/g, "."),
           category: getCategoryName(shortName.slice(0, 3)),
           merchant
@@ -132,6 +124,7 @@ module.exports = {
         //   options: importConfig.options,
         //   merchant
         // });
+
         import_queue[importConfig.id] = body;
 
         if (merchant) {
@@ -142,9 +135,26 @@ module.exports = {
 
           while (count > 0) {
             console.log(`${merchant} =>>`, count);
-            await strapi
-              .query(importConfig.contentType)
-              .delete({ merchant: merchant, _limit: 500 });
+            // await strapi
+            //   .query(importConfig.contentType)
+            //   .deleteMany({ merchant: merchant, _limit: 200 });
+
+            // await Products.deleteMany({ merchant });
+
+            const model = strapi.query(importConfig.contentType).model;
+
+            // Create bulk operations
+            const bulkOps = [
+              {
+                deleteMany: {
+                  filter: { merchant }
+                }
+              }
+            ];
+
+            // Execute bulk operations
+            await model.bulkWrite(bulkOps);
+
             count = await strapi
               .query(importConfig.contentType)
               .count({ merchant: merchant });
@@ -155,7 +165,7 @@ module.exports = {
           importConfigId: importConfig.id
         });
 
-        importNextItem(importConfig, merchant);
+        body.length > 0 && importNextItem(importConfig, merchant);
       } catch (error) {
         console.log(error, 'ERROR')
         reject(new Error(error));

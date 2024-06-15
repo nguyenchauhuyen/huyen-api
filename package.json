@@ -25,7 +25,7 @@
     "simple-statistics": "7.0.7",
     "strapi": "^3.4.4",
     "strapi-admin": "^3.4.4",
-    "strapi-connector-mongoose": "^3.4.4",
+    "strapi-connector-mongoose": "^3.6.11",
     "strapi-middleware-cache": "^1.2.0",
     "strapi-plugin-content-manager": "^3.4.4",
     "strapi-plugin-content-type-builder": "^3.4.4",
