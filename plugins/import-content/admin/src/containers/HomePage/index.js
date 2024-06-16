@@ -285,7 +285,9 @@ class HomePage extends Component {
                 strapi.notification.error(`Please select Merchant`);
             }
         } catch (e) {
-            strapi.notification.error(`${e}`);
+            this.setState({ saving: false }, () => {
+                strapi.notification.error(`${e}`);
+            });
         }
     };
 
