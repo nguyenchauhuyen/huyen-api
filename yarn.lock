@@ -10034,7 +10034,7 @@ strapi-admin@^3.4.4:
     webpackbar "^4.0.0"
     yup "^0.32.9"
 
-strapi-connector-mongoose@^3.4.4:
+strapi-connector-mongoose@^3.6.11:
   version "3.6.11"
   resolved "https://registry.yarnpkg.com/strapi-connector-mongoose/-/strapi-connector-mongoose-3.6.11.tgz#7490866ef34f5f1c922e9bb6a9feef69a243258f"
   integrity sha512-AfquWFtSx16qSJN8tmreGG4lbsStf4QlOUjDKTUQkGON7ZyKRiGgRpFVXuQi0EhUHlmD5h9m3iJhUmZOpGn89g==

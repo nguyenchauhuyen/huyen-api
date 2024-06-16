@@ -269,7 +269,7 @@ class HomePage extends Component {
 
         try {
 
-            const data = selectedUnitPrice ? analysis.data.map(it => { return { name: it.name, price: `${it.price}${selectedUnitPrice}` } }) : analysis.data;
+            const data = selectedUnitPrice ? analysis.data.map(it => { return { name: it.name, price: it.price ? `${it.price}${selectedUnitPrice}` : 0 } }) : analysis.data;
             const payload = { "source": analysis.sourceType, "type": "text/csv", "options": {}, "data": data, "contentType": selectedContentType, "fieldMapping": { "name": { "targetField": "name" }, "displayName": { "targetField": "displayName" }, "price": { "targetField": "price" }, "category": { "targetField": "category" }, "merchant": { "targetField": "merchant" } } };
 
             if (selectedMerchant) {
@@ -285,14 +285,16 @@ class HomePage extends Component {
                 strapi.notification.error(`Please select Merchant`);
             }
         } catch (e) {
-            strapi.notification.error(`${e}`);
+            this.setState({ saving: false }, () => {
+                strapi.notification.error(`${e}`);
+            });
         }
     };
 
     handleClear = async () => {
         try {
             if (this.state.selectedMerchant) {
-                const payload = { "source": "upload", "type": "text/csv", "options": {}, "data": "name,price", "contentType": "application::product.product", "fieldMapping": { "name": { "targetField": "name" }, "displayName": { "targetField": "displayName" }, "price": { "targetField": "price" }, "category": { "targetField": "category" }, "merchant": { "targetField": "merchant" } } };
+                const payload = { "source": "upload", "type": "text/csv", "options": {}, "data": "", "contentType": "application::product.product", "fieldMapping": { "name": { "targetField": "name" }, "displayName": { "targetField": "displayName" }, "price": { "targetField": "price" }, "category": { "targetField": "category" }, "merchant": { "targetField": "merchant" } } };
 
                 await request("/import-content", {
                     method: "POST",
@@ -372,7 +374,7 @@ ${this.state.csvData}`, {
         return (
             <div className={"container-fluid"} style={{ padding: "18px 30px" }}>
                 <PluginHeader
-                    title={"Import Content"}
+                    title={"Import Data"}
                     description={"Import CSV and RSS-Feed into your Content Types"}
                 />
                 <HeaderNav
@@ -381,10 +383,10 @@ ${this.state.csvData}`, {
                             name: "Import Data",
                             to: getUrl("")
                         },
-                        {
-                            name: "Import History",
-                            to: getUrl("history")
-                        }
+                        // {
+                        //     name: "Import History",
+                        //     to: getUrl("history")
+                        // }
                     ]}
                     style={{ marginTop: "4.4rem" }}
                 />
@@ -439,7 +441,7 @@ ${this.state.csvData}`, {
                                     }
                                 />
                             </div>
-                            <div className={"col-2"}>
+                            <div className={"col-4"}>
                                 <Label htmlFor="importMerchant">Merchant</Label>
 
                                 <SearchDropdown
@@ -463,7 +465,7 @@ ${this.state.csvData}`, {
 
                         <Row className={"row"}>
                             <div className={"col-12"}>
-                                <Label htmlFor="importContent">Import Content</Label>
+                                <Label htmlFor="importContent">Import Data</Label>
                                 <Textarea style={{
                                     width: '100 %',
                                     height: '50vh',
