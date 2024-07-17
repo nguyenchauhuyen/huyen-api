@@ -25,13 +25,14 @@ module.exports = {
   async find(ctx) {
     let entities;
     if (ctx.query._q) {
-      const name =
-        (ctx.query._q[0] !== "*" ? "^" : "") +
-        ctx.query._q.split("*").join(".*") +
-        (ctx.query._q[ctx.query._q.length - 1] !== "*" ? "$" : "");
+      const _q = ctx.query._q;
+      //   (ctx.query._q[0] !== "*" ? "^" : "") +
+
+      let q = _q.split("*").join(".*") + (_q[_q.length - 1] !== "*" ? "$" : "");
+      const regex = new RegExp(q, '');
 
       let query = {
-        name: new RegExp(name),
+        name:  { $regex: regex } ,
         category: ctx.query.category || null,
         _start: parseInt(ctx.query._start) || 0,
         _limit: parseInt(ctx.query._limit) || 100,

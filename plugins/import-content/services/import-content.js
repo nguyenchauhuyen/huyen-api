@@ -16,7 +16,7 @@ const import_queue = {};
 const importNextItem = async (importConfig, merchant) => {
 
   const items = [];
-  while (import_queue[importConfig.id].length > 0 && items.length < 100) {
+  while (import_queue[importConfig.id].length > 0 && items.length < 200) {
     items.push(import_queue[importConfig.id].shift());
   }
 
@@ -135,11 +135,6 @@ module.exports = {
 
           while (count > 0) {
             console.log(`${merchant} =>>`, count);
-            // await strapi
-            //   .query(importConfig.contentType)
-            //   .deleteMany({ merchant: merchant, _limit: 200 });
-
-            // await Products.deleteMany({ merchant });
 
             const model = strapi.query(importConfig.contentType).model;
 
