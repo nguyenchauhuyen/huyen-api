@@ -228,45 +228,6 @@ class HomePage extends Component {
         } = this.state;
         // const { analysisConfig } = this;
 
-        // if (!!selectedMerchant) {
-        //     this.setState({ saving: true });
-        //     let defaultMapping = fieldMapping;
-        //     analysis.fieldStats.forEach(field => {
-        //         if (!fieldMapping[field.fieldName]) {
-        //             defaultMapping[field.fieldName] = { targetField: field.fieldName };
-        //         }
-        //     });
-        //     const importConfig =
-        //         selectedContentType === "application::product.product"
-        //             ? {
-        //                 ...analysisConfig,
-        //                 contentType: selectedContentType,
-        //                 merchant: selectedMerchant.value,
-        //                 fieldMapping: {
-        //                     ...defaultMapping
-        //                 }
-        //             }
-        //             : {
-        //                 ...analysisConfig,
-        //                 contentType: selectedContentType,
-        //                 fieldMapping
-        //             };
-        //     try {
-        //         await request("/import-content", {
-        //             method: "POST",
-        //             body: importConfig
-        //         });
-        //         console.log(selectedMerchant)
-        //         this.setState({ saving: false }, () => {
-        //             strapi.notification.info("Import started");
-        //         });
-        //     } catch (e) {
-        //         strapi.notification.error(`${e}`);
-        //     }
-        // } else {
-        //     strapi.notification.error(`Please select Merchant`);
-        // }
-
         try {
 
             const data = selectedUnitPrice ? analysis.data.map(it => { return { name: it.name, price: it.price ? `${it.price}${selectedUnitPrice}` : 0 } }) : analysis.data;
@@ -409,7 +370,7 @@ ${this.state.csvData}`, {
                                 />
                             </div>
                             <div className={"col-2"}>
-                                <Label htmlFor="importDest">Import Destination</Label>
+                                <Label htmlFor="importDest">Destination</Label>
                                 <Select
                                     value={this.state.selectedContentType}
                                     name="importDest"
@@ -420,7 +381,7 @@ ${this.state.csvData}`, {
                                 />
                             </div>
                             <div className={"col-2"}>
-                                <Label htmlFor="importDest">Import Delimiter</Label>
+                                <Label htmlFor="importDest">Delimiter</Label>
                                 <Select
                                     value={this.state.selectedDelimiter}
                                     name="importDelimiter"
@@ -493,16 +454,16 @@ ${this.state.csvData}`, {
                                     onClick={() => this.setState({ showDeleteModal: true })}
                                 />
                             </div>
-                            <PopUpWarning
+                            {this.state.selectedMerchant && <PopUpWarning
                                 isOpen={this.state.showDeleteModal}
                                 toggleModal={() => this.setState({ showDeleteModal: false })}
                                 content={{
                                     title: `Vui Lòng Xác nhận`,
-                                    message: `Bạn có chắc muốn xóa bảng sim từ đại lý ${this.state.selectedMerchant.label} ?`
+                                    message: `Bạn có chắc muốn xóa bảng sim từ đại lý ${this.state.selectedMerchant?.label} ?`
                                 }}
                                 popUpWarningType="danger"
                                 onConfirm={this.handleClear}
-                            />
+                            />}
 
                         </Row>
                     </Block>}
