@@ -16,7 +16,7 @@ const import_queue = {};
 const importNextItem = async (importConfig, merchant) => {
 
   const items = [];
-  while (import_queue[importConfig.id].length > 0 && items.length < 200) {
+  while (import_queue[importConfig.id].length > 0 && items.length < 100) {
     items.push(import_queue[importConfig.id].shift());
   }
 

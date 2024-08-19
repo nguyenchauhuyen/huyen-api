@@ -46,11 +46,11 @@ class HomePage extends Component {
         csvData: "",
     };
 
-    importSources = [
-        { label: "External URL ", value: "url" },
-        { label: "Upload file", value: "upload" },
-        { label: "Raw text", value: "raw" }
-    ];
+    // importSources = [
+    //     { label: "External URL ", value: "url" },
+    //     { label: "Upload file", value: "upload" },
+    //     { label: "Raw text", value: "raw" }
+    // ];
 
     delimiterTypes = [
         { label: 'Tab', value: '\t' },
@@ -65,28 +65,28 @@ class HomePage extends Component {
         { label: 'X1000000', value: '000000' },
     ]
 
-    getModels = async () => {
-        try {
-            const response = await request("/content-type-builder/content-types", {
-                method: "GET"
-            });
+    // getModels = async () => {
+    //     try {
+    //         const response = await request("/content-type-builder/content-types", {
+    //             method: "GET"
+    //         });
 
-            // Remove non-user content types from models
-            const models = get(response, ["data"], []).filter(
-                obj => !has(obj, "plugin")
-            );
-            const modelOptions = models.map(model => {
-                return {
-                    label: get(model, ["schema", "name"], ""), // (name is used for display_name)
-                    value: model.uid // (uid is used for table creations)
-                };
-            });
-            return { models, modelOptions };
-        } catch (e) {
-            strapi.notification.error(`${e}`);
-        }
-        return [];
-    };
+    //         // Remove non-user content types from models
+    //         const models = get(response, ["data"], []).filter(
+    //             obj => !has(obj, "plugin")
+    //         );
+    //         const modelOptions = models.map(model => {
+    //             return {
+    //                 label: get(model, ["schema", "name"], ""), // (name is used for display_name)
+    //                 value: model.uid // (uid is used for table creations)
+    //             };
+    //         });
+    //         return { models, modelOptions };
+    //     } catch (e) {
+    //         strapi.notification.error(`${e}`);
+    //     }
+    //     return [];
+    // };
 
     getMerchants = async () => {
         try {
@@ -274,24 +274,24 @@ class HomePage extends Component {
     }
 
     componentDidMount() {
-        this.getModels().then(res => {
-            const { models, modelOptions } = res;
+        // this.getModels().then(res => {
+        //     const { models, modelOptions } = res;
+        //     this.setState({
+        //         models,
+        //         modelOptions,
+        //         selectedContentType: modelOptions ? "application::product.product" : ""
+        //     });
+        // });
+
+        this.getMerchants().then(res => {
+            const { merchants, merchantOptions } = res;
             this.setState({
-                models,
-                modelOptions,
-                selectedContentType: modelOptions ? "application::product.product" : ""
+                loading: false,
+                merchants,
+                merchantOptions,
             });
-
-            this.getMerchants().then(res => {
-                const { merchants, merchantOptions } = res;
-                this.setState({
-                    loading: false,
-                    merchants,
-                    merchantOptions,
-                });
-            });
-
         });
+
     }
 
     handleParseCSV = async () => {
@@ -358,7 +358,7 @@ ${this.state.csvData}`, {
                         style={{ marginBottom: 12 }}
                     >
                         <Row className={"row"}>
-                            <div className={"col-2"}>
+                            {/* <div className={"col-2"}>
                                 <Label htmlFor="importSource">Import Source</Label>
                                 <Select
                                     name="importSource"
@@ -379,7 +379,7 @@ ${this.state.csvData}`, {
                                         this.selectImportDest(value)
                                     }
                                 />
-                            </div>
+                            </div> */}
                             <div className={"col-2"}>
                                 <Label htmlFor="importDest">Delimiter</Label>
                                 <Select

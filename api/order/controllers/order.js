@@ -15,7 +15,7 @@ module.exports = {
       try {
         await strapi.plugins["email"].services.email.send({
           to: strapi.config.get("server.bookingEmailTo"),
-          // from: "admin@strapi.io",
+          // from: "default from setting",
           subject: `New Order from ${entity.customerName}`,
           text: `The product ${entity.product.name} has been booked.
 Customer Name: ${entity.customerName}
