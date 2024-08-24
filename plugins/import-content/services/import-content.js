@@ -9,7 +9,7 @@
 const { resolveDataFromRequest, getItemsFromData, getCategoryName } = require("./utils/utils");
 const analyzer = require("./utils/analyzer");
 const _ = require("lodash");
-const importFields = require("./utils/importFields");
+// const importFields = require("./utils/importFields");
 // const importMediaFiles = require("./utils/importMediaFiles");
 
 const import_queue = {};
@@ -29,23 +29,20 @@ const importNextItem = async (importConfig, merchant) => {
   }
 
   try {
-    const importedItems = items.filter(it => it.name && it.price).map(async (sourceItem) => {
+    const importedItems = items.filter(it => it.name && it.price).map((sourceItem) => {
       let name = sourceItem.name.trim();
       if (name.charAt(0) !== "0") {
         name = "0" + name;
       }
       let shortName = name?.replace(/\D/g, "");
 
-      return await importFields(
-        {
-          name: shortName,
-          price: sourceItem.price.replace(/\D/g, ""),
-          displayName: name.replace(/[ ,]/g, "."),
-          category: getCategoryName(shortName.slice(0, 3)),
-          merchant
-        },
-        importConfig.fieldMapping
-      );
+      return {
+        name: shortName,
+        price: sourceItem.price.replace(/\D/g, ""),
+        displayName: name.replace(/[ ,]/g, "."),
+        category: getCategoryName(shortName.slice(0, 3)),
+        merchant
+      };
     });
 
     // const importedItem = await importFields(
@@ -55,14 +52,21 @@ const importNextItem = async (importConfig, merchant) => {
 
     console.log("==>", items.map(it => it.name));
 
-    await strapi
-      .query(importConfig.contentType)
-      .createMany(importedItems);
+    // await strapi
+    //   .query(importConfig.contentType)
+    //   .createMany(importedItems);
+
+    const model = strapi.query(importConfig.contentType).model;
+    const bulkOps = importedItems.map(document => { return { insertOne: { document } } });
+
+    // Execute bulk operations
+    await model.bulkWrite(bulkOps);
+
   } catch (e) {
     console.log(e);
   }
   const { IMPORT_THROTTLE } = strapi.plugins["import-content"].config;
-  setTimeout(() => importNextItem(importConfig, merchant), IMPORT_THROTTLE || 0);
+  setTimeout(() => importNextItem(importConfig, merchant), IMPORT_THROTTLE || 5000);
 };
 
 const undo_queue = {};
