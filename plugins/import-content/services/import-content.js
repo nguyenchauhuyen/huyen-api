@@ -60,7 +60,7 @@ const importNextItem = async (importConfig, merchant) => {
     const bulkOps = importedItems.map(document => { return { insertOne: { document } } });
 
     // Execute bulk operations
-    await model.bulkWrite(bulkOps);
+    await model.bulkWrite(bulkOps, { ordered: false });
 
   } catch (e) {
     console.log(e);
