@@ -29,12 +29,19 @@ const importNextItem = async (importConfig, merchant) => {
   }
 
   try {
-    const importedItems = items.filter(it => it.name && it.price).map((sourceItem) => {
+    const importedItems = items.filter(it => {
+      let name = it.name.trim();
+      if (name.charAt(0) !== "0") {
+        name = "0" + name;
+      }
+      const shortName = name?.replace(/\D/g, "");
+      return shortName.length === 10 && it.price
+    }).map((sourceItem) => {
       let name = sourceItem.name.trim();
       if (name.charAt(0) !== "0") {
         name = "0" + name;
       }
-      let shortName = name?.replace(/\D/g, "");
+      const shortName = name?.replace(/\D/g, "");
 
       return {
         name: shortName,
