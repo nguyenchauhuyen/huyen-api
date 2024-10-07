@@ -11,7 +11,7 @@ module.exports = ({ env }) => ({
         db: 0,                             // Redis DB (default is 0)
         //ttl: 86400,                         // Cache TTL (Time to live) in seconds
       },
-      models: ['product'],
+      models: ['product', 'article'],
     },
   },
 });
