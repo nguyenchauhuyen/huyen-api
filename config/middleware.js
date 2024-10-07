@@ -2,17 +2,16 @@ module.exports = ({ env }) => ({
   settings: {
     cache: {
       enabled: true,
-      type: "mem",
-      max: 5000,
-      models: ["products"]
-      //   redisConfig: {
-      //     sentinels: [
-      //       { host: "192.168.10.41", port: 26379 },
-      //       { host: "192.168.10.42", port: 26379 },
-      //       { host: "192.168.10.43", port: 26379 }
-      //     ],
-      //     name: "redis-primary"
-      //   }
-    }
-  }
+      type: 'redis', // Use Redis for caching
+      maxAge: 3600000 * 24, // 24 hours
+      redisConfig: {
+        password: env('REDIS_PASSWORD'),
+        host: env('REDIS_HOST'),
+        port: env('REDIS_PORT'),
+        db: 0,                             // Redis DB (default is 0)
+        //ttl: 86400,                         // Cache TTL (Time to live) in seconds
+      },
+      models: ['product'],
+    },
+  },
 });
