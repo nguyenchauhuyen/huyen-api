@@ -1,0 +1,10 @@
+POST http://localhost:1337/orders
+Content-Type: application/json
+
+{
+  "amount": 1500,
+  "bookingNote": "0987666555",
+  "customerName": "bar",
+  "customerPhone": "0908397746",
+  "customerAddress": "123 Le Loi"
+}

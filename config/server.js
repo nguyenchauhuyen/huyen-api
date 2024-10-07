@@ -7,5 +7,8 @@ module.exports = ({ env }) => ({
       secret: env('ADMIN_JWT_SECRET', '3fa7baedfb859ba1db9d263a89c9022b'),
     },
   },
-  bookingEmailTo: env('BOOKING_EMAIL_TO', 'nguyenchauhuyen@gmail.com')
+  bookingEmailTo: env('BOOKING_EMAIL_TO', 'nguyenchauhuyen@gmail.com'),
+  redisHost: env('REDIS_HOST'),
+  redisPort: env.int('REDIS_PORT', 16839),
+  redisPassword: env('REDIS_PASSWORD')
 });

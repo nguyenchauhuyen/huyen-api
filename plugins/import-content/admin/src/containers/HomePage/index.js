@@ -24,7 +24,7 @@ import { Button, Textarea } from "@buffetjs/core";
 import { LoadingBar } from '@buffetjs/styles';
 import Autocomplete from 'react-select';
 import Papa from 'papaparse';
-import { LoadingIndicator, PopUpWarning } from "strapi-helper-plugin";
+import { PopUpWarning } from "strapi-helper-plugin";
 
 class HomePage extends Component {
     state = {

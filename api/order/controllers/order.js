@@ -17,7 +17,7 @@ module.exports = {
           to: strapi.config.get("server.bookingEmailTo"),
           // from: "default from setting",
           subject: `New Order from ${entity.customerName}`,
-          text: `The product ${entity.product.name} has been booked.
+          text: `The product ${entity.product?.name || 'NA'} has been booked.
 Customer Name: ${entity.customerName}
 Customer Phone: ${entity.customerPhone}
 Customer Email: ${entity.customerEmail}

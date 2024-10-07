@@ -32,8 +32,10 @@ module.exports = {
       const regex = new RegExp(q, '');
 
       let query = {
-        name:  { $regex: regex } ,
+        name: { $regex: regex },
         category: ctx.query.category || null,
+        price_gte: ctx.query.price_gte || null,
+        price_lte: ctx.query.price_lte || null,
         _start: parseInt(ctx.query._start) || 0,
         _limit: parseInt(ctx.query._limit) || 100,
         _sort: ctx.query._sort || "id:desc"
