@@ -24,15 +24,20 @@ module.exports = {
   },
   async find(ctx) {
     let entities;
+
+    const countQuery = {
+      category: ctx.query.category || null,
+      price_gte: ctx.query.price_gte || null,
+      price_lte: ctx.query.price_lte || null,
+    };
+
     if (ctx.query._q) {
       const _q = ctx.query._q;
-      //   (ctx.query._q[0] !== "*" ? "^" : "") +
+      const q = _q.split("*").join(".*") + (_q[_q.length - 1] !== "*" ? "$" : "");
+      const nameRegex = { $regex: new RegExp(q, '') };
 
-      let q = _q.split("*").join(".*") + (_q[_q.length - 1] !== "*" ? "$" : "");
-      const regex = new RegExp(q, '');
-
-      let query = {
-        name: { $regex: regex },
+      const query = {
+        name: nameRegex,
         category: ctx.query.category || null,
         price_gte: ctx.query.price_gte || null,
         price_lte: ctx.query.price_lte || null,
@@ -40,30 +45,31 @@ module.exports = {
         _limit: parseInt(ctx.query._limit) || 100,
         _sort: ctx.query._sort || "id:desc"
       };
+
+      countQuery.name = nameRegex;
       entities = await strapi.services.product.find(query);
+
     } else {
       entities = await strapi.services.product.find(ctx.query);
     }
 
-    return entities.map(entity => {
-      return sanitizeEntity(entity, { model: strapi.models.product });
-    });
+    const totalCount = await strapi.services.product.count(countQuery);
+
+    return {
+      data: entities.map(entity => {
+        return sanitizeEntity(entity, { model: strapi.models.product });
+      }),
+      totalCount
+    };
   },
   async count(ctx) {
-    let count;
+    const query = ctx.query;
     if (ctx.query._q) {
-      const name =
-        (ctx.query._q[0] !== "*" ? "^" : "") +
-        ctx.query._q.split("*").join(".*") +
-        (ctx.query._q[ctx.query._q.length - 1] !== "*" ? "$" : "");
-      let query = {
-        name: new RegExp(name),
-        category: ctx.query.category || null
-      };
-      count = await strapi.services.product.count(query);
-    } else {
-      count = await strapi.services.product.count(ctx.query);
+      const _q = ctx.query._q;
+      const q = _q.split("*").join(".*") + (_q[_q.length - 1] !== "*" ? "$" : "");
+      query.name = { $regex: new RegExp(q, '') };
     }
-    return count;
+
+    return await strapi.services.product.count(query);
   }
 };
