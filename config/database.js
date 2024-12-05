@@ -4,10 +4,14 @@ module.exports = ({ env }) => ({
     "default": {
       "connector": "mongoose",
       "settings": {
-        "uri": env("DB_URI", "")
+        "uri": env("DB_URI", "")
       },
       "options": {
-        "ssl": true
+        ssl: true,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        maxPoolSize: 10,
+        minPoolSize: 2,
       }
     }
   }
