@@ -31,6 +31,9 @@ module.exports = {
       price_lte: ctx.query.price_lte || null,
     };
 
+    const limit = parseInt(ctx.query._limit) || 100;
+    const start = parseInt(ctx.query._start) || 0;
+
     if (ctx.query._q) {
       const _q = ctx.query._q;
       const q = _q.split("*").join(".*") + (_q[_q.length - 1] !== "*" ? "$" : "");
@@ -41,8 +44,8 @@ module.exports = {
         category: ctx.query.category || null,
         price_gte: ctx.query.price_gte || null,
         price_lte: ctx.query.price_lte || null,
-        _start: parseInt(ctx.query._start) || 0,
-        _limit: parseInt(ctx.query._limit) || 100,
+        _start: start,
+        _limit: limit,
         _sort: ctx.query._sort || "id:desc"
       };
 
@@ -53,7 +56,7 @@ module.exports = {
       entities = await strapi.services.product.find(ctx.query);
     }
 
-    const totalCount = await strapi.services.product.count(countQuery);
+    const totalCount = limit === 48 ? await strapi.services.product.count(countQuery) : -1;
 
     return {
       data: entities.map(entity => {

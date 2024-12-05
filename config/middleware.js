@@ -4,8 +4,10 @@ module.exports = ({ env }) => ({
       enabled: true,
       type: env('REDIS_HOST') ? 'redis' : 'mem', // Use Redis for caching
       maxAge: 3600000 * 24, // 24 hours
-      max: 20000, // Safe value for 1 KB entries
+      max: 25000, // Safe value for 1 KB entries
       redisConfig: {
+        tls: true,
+        enableTLSForSentinelMode: false,
         host: env('REDIS_HOST'),
         port: env('REDIS_PORT'),
         password: env('REDIS_PASSWORD'),
