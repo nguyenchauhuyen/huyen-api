@@ -6,8 +6,7 @@ module.exports = ({ env }) => ({
       maxAge: 3600000 * 24, // 24 hours
       max: 25000, // Safe value for 1 KB entries
       redisConfig: {
-        tls: true,
-        enableTLSForSentinelMode: false,
+        tls: env('REDIS_TLS') || false,
         host: env('REDIS_HOST'),
         port: env('REDIS_PORT'),
         password: env('REDIS_PASSWORD'),
